@@ -12,242 +12,201 @@ TREATMENT_PLAN_TEMPLATE = '''
 <!DOCTYPE html>
 <html dir="{{ text_direction }}" lang="{{ lang }}">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ page_title }}</title>
+<meta charset="UTF-8">
+<title>{{ page_title }}</title>
 
-    <style>
-        /* ====================== RESET ====================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+/* ====================== ADMIN RESET ====================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            font-family: {{ font_family }};
-            line-height: 1.8;
-            background-color: #f9f9f9;
-            color: #333;
-            padding: 20px;
-            font-size: 16pt;
-        }
+body {
+    font-family: {{ font_family }};
+    background: white;
+    color: #000;
+    padding: 35px;
+    font-size: 14pt;
+    line-height: 1.7;
+}
 
-        /* ====================== HEADER ====================== */
-        .header {
-            text-align: center;
-            padding: 20px;
-            margin: 0 auto 30px;
-            border-radius: 8px;
-            max-width: 1000px;
-            color: white;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+/* ====================== ADMIN HEADER ====================== */
+.header {
+    border: 2px solid #000;
+    padding: 20px;
+    margin-bottom: 35px;
+    text-align: center;
+}
 
-        .header h1 {
-            font-size: 28pt;
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-        }
+.header h1 {
+    font-size: 22pt;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
 
-        .date {
-            font-size: 14pt;
-            opacity: 0.9;
-        }
+.date {
+    font-size: 12pt;
+    font-style: italic;
+}
 
-        /* ====================== SECTIONS ====================== */
-        .section {
-            background: white;
-            padding: 25px;
-            margin: 0 auto 30px;
-            border-radius: 8px;
-            max-width: 1000px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            page-break-inside: avoid;
-        }
+/* ====================== SECTIONS ====================== */
+.section {
+    border: 1px solid #000;
+    padding: 20px;
+    margin-bottom: 30px;
+}
 
-        .section-title {
-            font-size: 22pt;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-            position: relative;
-            text-align: {{ text_align }};
-        }
+.section-title {
+    font-size: 18pt;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: {{ text_align }};
+    padding-bottom: 5px;
+    border-bottom: 2px solid #000;
+}
 
-        .section-title::after {
-            content: "";
-            position: absolute;
-            {{ section_after_position }}: 0;
-            bottom: -2px;
-            width: 150px;
-            height: 3px;
-            background: #3498db;
-        }
+/* ====================== INFO GRID ====================== */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 20px;
+}
 
-        /* ====================== GRID ====================== */
-        .info-grid {
-            display: grid;
-            gap: 15px;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            margin-top: 20px;
-        }
+.info-label {
+    font-weight: bold;
+    font-size: 14pt;
+    text-align: {{ text_align }};
+}
 
-        .info-label {
-            font-weight: bold;
-            color: #555;
-            font-size: 14pt;
-            margin-bottom: 5px;
-            text-align: {{ text_align }};
-        }
+.info-value {
+    border: 1px solid #777;
+    padding: 8px;
+    font-size: 14pt;
+    text-align: {{ text_align }};
+}
 
-        .info-value {
-            background: #f8f8f8;
-            padding: 10px;
-            border-radius: 6px;
-            border-{{ border_side }}: 3px solid #3498db;
-            font-size: 15pt;
-            text-align: {{ text_align }};
-        }
+/* ====================== GROUP TABLES ====================== */
+.group {
+    margin-bottom: 25px;
+}
 
-        /* ====================== GROUP TABLES ====================== */
-        .group {
-            margin-bottom: 30px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
+.group-title {
+    font-weight: bold;
+    font-size: 16pt;
+    padding: 10px;
+    background: #e5e5e5;
+    border: 1px solid #000;
+    text-align: {{ text_align }};
+}
 
-        .group-title {
-            font-size: 18pt;
-            padding: 15px;
-            text-align: {{ text_align }};
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 13pt;
+}
 
-        .group.treatment .group-title { background: #e74c3c; color: white; }
-        .group.support   .group-title { background: #f39c12; color: white; }
-        .group.excellence .group-title { background: #2ecc71; color: white; }
+th, td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: {{ text_align }};
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14pt;
-        }
+/* ====================== SOLUTIONS ====================== */
+.solution-block {
+    border: 1px solid #000;
+    padding: 15px;
+    margin-bottom: 25px;
+    background: #f7f7f7;
+}
 
-        th, td {
-            padding: 12px 15px;
-            text-align: {{ text_align }};
-            border-bottom: 1px solid #eee;
-        }
+.solution-block-title {
+    font-weight: bold;
+    font-size: 16pt;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 6px;
+}
 
-        th {
-            background-color: #f5f5f5;
-            font-weight: bold;
-        }
+/* solution items */
+.solution-point {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: {{ flex_direction }};
+}
 
-        tr:nth-child(even) { background-color: #f9f9f9; }
+.point-number {
+    font-weight: bold;
+    margin-{{ bullet_margin_side }}: 10px;
+}
 
-        /* ====================== SOLUTIONS ====================== */
-        .solution-block {
-            background: #f8f9fa;
-            border-{{ border_side }}: 4px solid #9b59b6;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
+/* ====================== FOOTER ====================== */
+.footer {
+    text-align: center;
+    font-size: 11pt;
+    margin-top: 40px;
+    padding-top: 15px;
+    color: #444;
+    border-top: 1px solid #000;
+}
 
-        .solution-block-title {
-            font-size: 18pt;
-            margin-bottom: 15px;
-            color: #9b59b6;
-            display: flex;
-            align-items: center;
-            flex-direction: {{ flex_direction }};
-        }
-
-        .bullet {
-            font-size: 16pt;
-            font-weight: bold;
-            color: #9b59b6;
-            margin-{{ bullet_margin_side }}: 10px;
-        }
-
-        .point-content {
-            flex: 1;
-            font-size: 15pt;
-            text-align: {{ text_align }};
-        }
-
-        /* ====================== FOOTER ====================== */
-        .footer {
-            text-align: center;
-            padding-top: 20px;
-            margin: 40px auto 20px;
-            border-top: 1px solid #eee;
-            color: #777;
-            font-size: 12pt;
-            max-width: 1000px;
-        }
-
-        /* ====================== PRINT ====================== */
-        @media print {
-            @page { size: A4; margin: 0; }
-
-            .print-button { display: none !important; }
-
-            body { padding: 0; margin: 0; }
-            .section, .header { margin: 0; page-break-inside: avoid; }
-        }
-    </style>
+/* ====================== PRINT ====================== */
+@media print {
+    @page { size: A4 portrait; margin: 15mm; }
+    .print-button { display: none !important; }
+    body { padding: 0; }
+    .section { page-break-inside: avoid; }
+}
+</style>
 </head>
 <body>
 
-<button class="print-button" onclick="window.print()">
+<button class="print-button" onclick="window.print()" 
+style="padding:8px 15px; margin-bottom:20px; font-size:12pt;">
     {{ print_button_text }}
 </button>
 
 <div class="header">
     <h1>{{ main_title }}</h1>
-    <div class="date">{{ report_date_label }}: {{ date }}</div>
+    <div class="date">{{ report_date_label }} : {{ date }}</div>
 </div>
 
 <div class="section">
     <h2 class="section-title">{{ basic_info_title }}</h2>
     <div class="info-grid">
         {% for label, value in info_items %}
-        <div>
             <div class="info-label">{{ label }}</div>
             <div class="info-value">{{ value }}</div>
-        </div>
         {% endfor %}
     </div>
 </div>
 
-<div class="section groups-container">
+<div class="section">
     <h2 class="section-title">{{ classification_title }}</h2>
 
-    {% for group_key, group_title in group_titles.items() %}
-    <div class="group {{ group_key }}">
-        <h3 class="group-title">{{ group_title }}</h3>
+    {% for key, group_title in group_titles.items() %}
+        <div class="group">
+            <div class="group-title">{{ group_title }}</div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>{{ student_name_label }}</th>
-                    <th>{{ group_label }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for student in groups[group_key] %}
-                <tr>
-                    <td>{{ student.name }}</td>
-                    <td>{{ group_title }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ student_name_label }}</th>
+                        <th>{{ group_label }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in groups[key] %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        <td>{{ group_title }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% endfor %}
 </div>
 
@@ -256,29 +215,29 @@ TREATMENT_PLAN_TEMPLATE = '''
 
     {% for block_title, items in solution_blocks.items() %}
     <div class="solution-block">
-        <h3 class="solution-block-title">{{ block_title }}</h3>
+        <div class="solution-block-title">{{ block_title }}</div>
 
         {% if items %}
             {% for item in items %}
             <div class="solution-point">
                 <span class="point-number">{{ loop.index }}.</span>
-                <span class="point-content">{{ item }}</span>
+                <span>{{ item }}</span>
             </div>
             {% endfor %}
         {% else %}
             <p>{{ no_items_text }}</p>
         {% endif %}
-
     </div>
     {% endfor %}
 </div>
 
 <div class="footer">
-    <p>{{ footer_text }} © {{ date[:4] }}</p>
+    {{ footer_text }} – © {{ date[:4] }}
 </div>
 
 </body>
 </html>
+
 '''
 
 # --------------------------------------------------------------------------
