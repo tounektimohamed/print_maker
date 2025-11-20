@@ -3,75 +3,79 @@ from flask_cors import CORS
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)  # Configuration CORS simple pour le développement
+CORS(app)
 
+# --------------------------------------------------------------------------
+# TEMPLATE HTML PRINCIPAL
+# --------------------------------------------------------------------------
 TREATMENT_PLAN_TEMPLATE = '''
 <!DOCTYPE html>
 <html dir="{{ text_direction }}" lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
     <title>{{ page_title }}</title>
+
     <style>
-        /* Reset amélioré */
+        /* ====================== RESET ====================== */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        
+
         body {
             font-family: {{ font_family }};
             line-height: 1.8;
-            color: #333;
             background-color: #f9f9f9;
+            color: #333;
             padding: 20px;
             font-size: 16pt;
         }
-        
-        /* En-tête amélioré */
+
+        /* ====================== HEADER ====================== */
         .header {
             text-align: center;
-            margin: 0 auto 30px;
             padding: 20px;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            color: white;
+            margin: 0 auto 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             max-width: 1000px;
+            color: white;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        
+
         .header h1 {
             font-size: 28pt;
             margin-bottom: 10px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
         }
-        
-        .header .date {
+
+        .date {
             font-size: 14pt;
             opacity: 0.9;
         }
-        
-        /* Sections améliorées */
+
+        /* ====================== SECTIONS ====================== */
         .section {
             background: white;
-            margin: 0 auto 30px;
             padding: 25px;
+            margin: 0 auto 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             max-width: 1000px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             page-break-inside: avoid;
         }
-        
+
         .section-title {
             font-size: 22pt;
             color: #2c3e50;
             margin-bottom: 20px;
-            padding-bottom: 10px;
             border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
             position: relative;
             text-align: {{ text_align }};
         }
-        
+
         .section-title::after {
             content: "";
             position: absolute;
@@ -81,19 +85,15 @@ TREATMENT_PLAN_TEMPLATE = '''
             height: 3px;
             background: #3498db;
         }
-        
-        /* Grille d'informations améliorée */
+
+        /* ====================== GRID ====================== */
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             margin-top: 20px;
         }
-        
-        .info-item {
-            margin-bottom: 15px;
-        }
-        
+
         .info-label {
             font-weight: bold;
             color: #555;
@@ -101,481 +101,238 @@ TREATMENT_PLAN_TEMPLATE = '''
             margin-bottom: 5px;
             text-align: {{ text_align }};
         }
-        
+
         .info-value {
-            padding: 10px;
             background: #f8f8f8;
+            padding: 10px;
             border-radius: 6px;
             border-{{ border_side }}: 3px solid #3498db;
             font-size: 15pt;
             text-align: {{ text_align }};
         }
-        
-        /* Groupes d'élèves améliorés */
-        .groups-container {
-            margin-top: 30px;
-        }
-        
+
+        /* ====================== GROUP TABLES ====================== */
         .group {
             margin-bottom: 30px;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }
-        
+
         .group-title {
             font-size: 18pt;
             padding: 15px;
-            margin: 0;
             text-align: {{ text_align }};
         }
-        
-        .group.treatment .group-title {
-            background-color: #e74c3c;
-            color: white;
-        }
-        
-        .group.support .group-title {
-            background-color: #f39c12;
-            color: white;
-        }
-        
-        .group.excellence .group-title {
-            background-color: #2ecc71;
-            color: white;
-        }
-        
+
+        .group.treatment .group-title { background: #e74c3c; color: white; }
+        .group.support   .group-title { background: #f39c12; color: white; }
+        .group.excellence .group-title { background: #2ecc71; color: white; }
+
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 14pt;
         }
-        
+
+        th, td {
+            padding: 12px 15px;
+            text-align: {{ text_align }};
+            border-bottom: 1px solid #eee;
+        }
+
         th {
             background-color: #f5f5f5;
-            padding: 12px 15px;
-            text-align: {{ text_align }};
             font-weight: bold;
         }
-        
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            text-align: {{ text_align }};
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        /* Blocs de solutions améliorés */
+
+        tr:nth-child(even) { background-color: #f9f9f9; }
+
+        /* ====================== SOLUTIONS ====================== */
         .solution-block {
             background: #f8f9fa;
-            margin-bottom: 25px;
-            padding: 20px;
-            border-radius: 8px;
             border-{{ border_side }}: 4px solid #9b59b6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
         }
-        
+
         .solution-block-title {
             font-size: 18pt;
-            color: #9b59b6;
             margin-bottom: 15px;
+            color: #9b59b6;
             display: flex;
             align-items: center;
-            text-align: {{ text_align }};
             flex-direction: {{ flex_direction }};
         }
-        
-        .solution-block-title::before {
-            content: "";
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            background-color: #9b59b6;
-            border-radius: 50%;
-            margin-{{ bullet_margin_side }}: 10px;
-        }
-        
-        .solution-point {
-            margin-bottom: 12px;
-            display: flex;
-            align-items: flex-start;
-            padding: 8px 0;
-            flex-direction: {{ flex_direction }};
-        }
-        
+
         .bullet {
+            font-size: 16pt;
+            font-weight: bold;
             color: #9b59b6;
-            font-weight: bold;
             margin-{{ bullet_margin_side }}: 10px;
-            margin-{{ bullet_opposite_side }}: 8px;
-            font-size: 16pt;
         }
-        
-        .point-number {
-            color: #e74c3c;
-            font-weight: bold;
-            margin-{{ bullet_margin_side }}: 10px;
-            margin-{{ bullet_opposite_side }}: 8px;
-            font-size: 16pt;
-        }
-        
+
         .point-content {
             flex: 1;
             font-size: 15pt;
             text-align: {{ text_align }};
         }
-        
-        /* Pied de page amélioré */
+
+        /* ====================== FOOTER ====================== */
         .footer {
             text-align: center;
-            margin: 40px auto 20px;
             padding-top: 20px;
+            margin: 40px auto 20px;
             border-top: 1px solid #eee;
             color: #777;
             font-size: 12pt;
             max-width: 1000px;
         }
-        
-        /* Bouton d'impression amélioré */
-        .print-button {
-            position: fixed;
-            top: 20px;
-            {{ print_button_side }}: 20px;
-            padding: 12px 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            z-index: 1000;
-            font-size: 14pt;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .print-button:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        /* Styles d'impression améliorés */
+
+        /* ====================== PRINT ====================== */
         @media print {
-            /* Suppression complète des marges et en-têtes/pieds de page */
-            @page {
-                size: A4;
-                margin: 0 !important;
-                padding: 0 !important;
-                @top-left { content: none !important; }
-                @top-center { content: none !important; }
-                @top-right { content: none !important; }
-                @bottom-left { content: none !important; }
-                @bottom-center { content: none !important; }
-                @bottom-right { content: none !important; }
-            }
-            
-            /* Styles du body - aucune marge externe */
-            body {
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                background-color: #f9f9f9 !important;
-                font-size: 16pt !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            
-            /* Conteneur principal */
-            body > *:not(.print-button) {
-                margin: 0 !important;
-                padding: 20px !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-            }
-            
-            /* Masquer le bouton d'impression et les liens blob */
-            .print-button,
-            a[href^="blob:"] {
-                display: none !important;
-                visibility: hidden !important;
-                height: 0 !important;
-                width: 0 !important;
-            }
-            
-            /* Conserver tous les styles visuels */
-            .header {
-                background: linear-gradient(135deg, #2c3e50, #3498db) !important;
-                color: white !important;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-                padding: 20px !important;
-                margin: 0 !important;
-            }
-            
-            .section {
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
-                background: white !important;
-                padding: 25px !important;
-                margin: 0 !important;
-                page-break-inside: avoid !important;
-            }
-            
-            /* Styles des groupes */
-            .group.treatment .group-title {
-                background-color: #e74c3c !important;
-                color: white !important;
-            }
-            
-            .group.support .group-title {
-                background-color: #f39c12 !important;
-                color: white !important;
-            }
-            
-            .group.excellence .group-title {
-                background-color: #2ecc71 !important;
-                color: white !important;
-            }
-            
-            /* Blocs de solutions */
-            .solution-block {
-                background: #f8f9fa !important;
-                border-{{ border_side }}: 4px solid #9b59b6 !important;
-            }
-            
-            .solution-block-title {
-                color: #9b59b6 !important;
-            }
-            
-            /* Styles des tableaux */
-            th {
-                background-color: #f5f5f5 !important;
-            }
-            
-            tr:nth-child(even) {
-                background-color: #f9f9f9 !important;
-            }
-            
-            /* Gestion des sauts de page */
-            .page-break {
-                page-break-before: always !important;
-            }
+            @page { size: A4; margin: 0; }
+
+            .print-button { display: none !important; }
+
+            body { padding: 0; margin: 0; }
+            .section, .header { margin: 0; page-break-inside: avoid; }
         }
     </style>
 </head>
 <body>
-    <!-- Bouton d'impression (masqué lors de l'impression) -->
-    <button class="print-button no-print" onclick="window.print()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
-            <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
-        </svg>
-        {{ print_button_text }}
-    </button>
 
-    <div class="header">
-        <h1>{{ main_title }}</h1>
-        <div class="date">{{ report_date_label }}: {{ date }}</div>
+<button class="print-button" onclick="window.print()">
+    {{ print_button_text }}
+</button>
+
+<div class="header">
+    <h1>{{ main_title }}</h1>
+    <div class="date">{{ report_date_label }}: {{ date }}</div>
+</div>
+
+<div class="section">
+    <h2 class="section-title">{{ basic_info_title }}</h2>
+    <div class="info-grid">
+        {% for label, value in info_items %}
+        <div>
+            <div class="info-label">{{ label }}</div>
+            <div class="info-value">{{ value }}</div>
+        </div>
+        {% endfor %}
     </div>
-    
-    <div class="section">
-        <h2 class="section-title">{{ basic_info_title }}</h2>
-        <div class="info-grid">
-            <div class="info-item">
-                <div class="info-label">{{ school_label }}:</div>
-                <div class="info-value">{{ schoolName }}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">{{ teacher_label }}:</div>
-                <div class="info-value">{{ profName }}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">{{ class_label }}:</div>
-                <div class="info-value">{{ className }}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">{{ subject_label }}:</div>
-                <div class="info-value">{{ matiereName }}</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">{{ criteria_label }}:</div>
-                <div class="info-value">{{ baremeName }}</div>
-            </div>
-            {% if sousBaremeName %}
-            <div class="info-item">
-                <div class="info-label">{{ sub_criteria_label }}:</div>
-                <div class="info-value">{{ sousBaremeName }}</div>
-            </div>
-            {% endif %}
-        </div>
+</div>
+
+<div class="section groups-container">
+    <h2 class="section-title">{{ classification_title }}</h2>
+
+    {% for group_key, group_title in group_titles.items() %}
+    <div class="group {{ group_key }}">
+        <h3 class="group-title">{{ group_title }}</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>{{ student_name_label }}</th>
+                    <th>{{ group_label }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in groups[group_key] %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ group_title }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    
-    <div class="section groups-container">
-        <h2 class="section-title">{{ classification_title }}</h2>
-        
-        <div class="group treatment">
-            <h3 class="group-title">{{ treatment_group_title }}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>{{ student_name_label }}</th>
-                        <th>{{ group_label }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for student in groups.treatment %}
-                    <tr>
-                        <td>{{ student.name }}</td>
-                        <td>{{ treatment_group_title }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="group support">
-            <h3 class="group-title">{{ support_group_title }}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>{{ student_name_label }}</th>
-                        <th>{{ group_label }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for student in groups.support %}
-                    <tr>
-                        <td>{{ student.name }}</td>
-                        <td>{{ support_group_title }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="group excellence">
-            <h3 class="group-title">{{ excellence_group_title }}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>{{ student_name_label }}</th>
-                        <th>{{ group_label }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for student in groups.excellence %}
-                    <tr>
-                        <td>{{ student.name }}</td>
-                        <td>{{ excellence_group_title }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    <div class="section">
-        <h2 class="section-title">{{ analysis_title }}</h2>
-        
-        <div class="solution-block">
-            <h3 class="solution-block-title">{{ solutions_title }}</h3>
-            {% for item in solutions_unified.solution %}
+    {% endfor %}
+</div>
+
+<div class="section">
+    <h2 class="section-title">{{ analysis_title }}</h2>
+
+    {% for block_title, items in solution_blocks.items() %}
+    <div class="solution-block">
+        <h3 class="solution-block-title">{{ block_title }}</h3>
+
+        {% if items %}
+            {% for item in items %}
             <div class="solution-point">
                 <span class="point-number">{{ loop.index }}.</span>
                 <span class="point-content">{{ item }}</span>
             </div>
-            {% else %}
-            <p>{{ no_solutions_text }}</p>
             {% endfor %}
-        </div>
+        {% else %}
+            <p>{{ no_items_text }}</p>
+        {% endif %}
 
-        <div class="solution-block">
-            <h3 class="solution-block-title">{{ problems_title }}</h3>
-            {% for item in solutions_unified.probleme %}
-            <div class="solution-point">
-                <span class="point-number">{{ loop.index }}.</span>
-                <span class="point-content">{{ item }}</span>
-            </div>
-            {% else %}
-            <p>{{ no_problems_text }}</p>
-            {% endfor %}
-        </div>
     </div>
-    
-    <div class="footer">
-        <p>{{ footer_text }} © {{ date[:4] }}</p>
-    </div>
+    {% endfor %}
+</div>
 
-    <script>
-        window.onload = function() {
-            // Option d'impression automatique
-            // setTimeout(window.print, 1000);
-        };
-    </script>
-    
+<div class="footer">
+    <p>{{ footer_text }} © {{ date[:4] }}</p>
+</div>
+
 </body>
 </html>
 '''
 
+# --------------------------------------------------------------------------
+# UTILITAIRES
+# --------------------------------------------------------------------------
+
+def clean_text(text):
+    """Nettoie un bloc de texte et le transforme en liste sans doublons."""
+    if not text:
+        return []
+
+    unwanted = ['ـ', '●', '★']
+    for u in unwanted:
+        text = text.replace(u, '')
+
+    return [line.strip() for line in text.split('\n') if line.strip()]
+
+
 def unify_solutions(data):
-    """Élimine les doublons et nettoie les solutions"""
-    def clean_text(text):
-        if not text:
-            return []
-        text = text.replace('ـ', '').replace('●', '').replace('★', '').strip()
-        return [line.strip() for line in text.split('\n') if line.strip()]
-    
-    # Utilisation d'un set pour éliminer les doublons
+    """Fusionne toutes les solutions/problèmes en éliminant les doublons."""
     solutions = set()
-    problemes = set()
+    problems = set()
 
-    # Traitement des données par défaut
-    default = data['solutions'].get('default', {})
-    for item in clean_text(default.get('solution', '')):
-        solutions.add(item)
-    for item in clean_text(default.get('probleme', '')):
-        problemes.add(item)
+    blocks = (
+        data['solutions'].get('default', {}),
+        *data['solutions'].get('userProposals', []),
+        *data['solutions'].get('globalProposals', [])
+    )
 
-    # Traitement des propositions utilisateur
-    for prop in data['solutions'].get('userProposals', []):
-        if 'solution' in prop:
-            for item in clean_text(prop['solution']):
-                solutions.add(item)
-        if 'probleme' in prop:
-            for item in clean_text(prop['probleme']):
-                problemes.add(item)
-
-    # Traitement des propositions globales
-    for prop in data['solutions'].get('globalProposals', []):
-        if 'solution' in prop:
-            for item in clean_text(prop['solution']):
-                solutions.add(item)
-        if 'probleme' in prop:
-            for item in clean_text(prop['probleme']):
-                problemes.add(item)
+    for block in blocks:
+        for item in clean_text(block.get('solution', '')):
+            solutions.add(item)
+        for item in clean_text(block.get('probleme', '')):
+            problems.add(item)
 
     return {
-        'solution': [s for s in solutions if s],
-        'probleme': [p for p in problemes if p]
+        'solution': sorted(solutions),
+        'probleme': sorted(problems)
     }
 
+
 def get_language_context(data):
-    """Détermine le contexte linguistique basé sur la matière"""
-    # Liste des matières considérées comme françaises
-    french_subjects = [
+    """Renvoie les paramètres linguistiques adaptés selon la matière."""
+    french_subjects = {
         "expression orale et récitation", "lecture", "production écrite",
         "écriture", "dictée", "langue", "langue française", "français"
-    ]
-    
-    matiere_name = data.get('matiereName', '').lower().strip()
-    is_french = any(subject in matiere_name for subject in french_subjects)
-    
-    if is_french:
+    }
+
+    matiere = data.get('matiereName', '').lower()
+
+    is_fr = any(key in matiere for key in french_subjects)
+
+    if is_fr:
         return {
-            # Configuration technique
             'lang': 'fr',
             'text_direction': 'ltr',
             'text_align': 'left',
@@ -583,122 +340,117 @@ def get_language_context(data):
             'section_after_position': 'left',
             'flex_direction': 'row',
             'bullet_margin_side': 'right',
-            'bullet_opposite_side': 'left',
             'print_button_side': 'right',
             'font_family': "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-            
-            # Textes en français
-            'page_title': 'Plan de traitement et origine de l\'erreur',
-            'main_title': 'Rapport du Plan de Traitement et Origine de l\'Erreur',
-            'print_button_text': 'Imprimer le rapport',
-            'report_date_label': 'Date du rapport',
-            'basic_info_title': 'Informations de base',
-            'school_label': 'Établissement scolaire',
-            'teacher_label': 'Enseignant(e)',
-            'class_label': 'Niveau scolaire',
-            'subject_label': 'Matière',
-            'criteria_label': 'Critère adopté',
-            'sub_criteria_label': 'Sous-critère',
-            'classification_title': 'Classification des apprenants par niveau d\'acquisition',
-            'treatment_group_title': 'Groupe de traitement (difficultés importantes)',
-            'support_group_title': 'Groupe de soutien (difficultés moyennes)',
-            'excellence_group_title': 'Groupe d\'excellence (bonne acquisition)',
-            'student_name_label': 'Nom de l\'élève',
-            'group_label': 'Groupe',
-            'analysis_title': 'Analyse des erreurs et propositions de traitement',
-            'solutions_title': 'Solutions proposées',
-            'problems_title': 'Analyse des erreurs',
-            'no_solutions_text': 'Aucune solution disponible',
-            'no_problems_text': 'Aucune analyse d\'erreur disponible',
-            'footer_text': 'Rapport généré automatiquement - Tous droits réservés'
-        }
-    else:
-        return {
-            # Configuration technique
-            'lang': 'ar',
-            'text_direction': 'rtl',
-            'text_align': 'right',
-            'border_side': 'right',
-            'section_after_position': 'right',
-            'flex_direction': 'row-reverse',
-            'bullet_margin_side': 'left',
-            'bullet_opposite_side': 'right',
-            'print_button_side': 'left',
-            'font_family': "'Amiri', 'Traditional Arabic', sans-serif",
-            
-            # Textes en arabe
-            'page_title': 'خطة العلاج وأصل الخطأ',
-            'main_title': 'تقرير خطة العلاج وأصل الخطأ',
-            'print_button_text': 'طباعة التقرير',
-            'report_date_label': 'تاريخ التقرير',
-            'basic_info_title': 'المعلومات الأساسية',
-            'school_label': 'المؤسسة التعليمية',
-            'teacher_label': 'الأستاذ(ة)',
-            'class_label': 'المستوى الدراسي',
-            'subject_label': 'المادة الدراسية',
-            'criteria_label': 'المعيار المعتمد',
-            'sub_criteria_label': 'المعيار الفرعي',
-            'classification_title': 'تصنيف المتعلمين حسب مستوى التحصيل',
-            'treatment_group_title': 'مجموعة العلاج (صعوبات كبيرة)',
-            'support_group_title': 'مجموعة الدعم (صعوبات متوسطة)',
-            'excellence_group_title': 'مجموعة التميز (تحصيل جيد)',
-            'student_name_label': 'اسم التلميذ(ة)',
-            'group_label': 'المجموعة',
-            'analysis_title': 'تحليل الأخطاء واقتراحات العلاج',
-            'solutions_title': 'الحلول المقترحة',
-            'problems_title': 'تحليل الأخطاء',
-            'no_solutions_text': 'لا توجد حلول متاحة',
-            'no_problems_text': 'لا توجد تحليلات للأخطاء متاحة',
-            'footer_text': 'تم إنشاء هذا التقرير آلياً - جميع الحقوق محفوظة'
+
+            # Textes
+            'page_title': "Plan de traitement et origine de l'erreur",
+            'main_title': "Rapport du Plan de Traitement et Origine de l'Erreur",
+            'print_button_text': "Imprimer le rapport",
+            'report_date_label': "Date du rapport",
+            'basic_info_title': "Informations de base",
+            'classification_title': "Classification des apprenants",
+            'analysis_title': "Analyse des erreurs et propositions",
+            'solutions_title': "Solutions proposées",
+            'problems_title': "Analyse des erreurs",
+            'group_titles': {
+                'treatment': "Groupe de traitement",
+                'support': "Groupe de soutien",
+                'excellence': "Groupe d'excellence"
+            },
+            'student_name_label': "Nom de l'élève",
+            'group_label': "Groupe",
+            'no_items_text': "Aucune donnée disponible",
+            'footer_text': "Rapport généré automatiquement"
         }
 
+    # Arabic
+    return {
+        'lang': 'ar',
+        'text_direction': 'rtl',
+        'text_align': 'right',
+        'border_side': 'right',
+        'section_after_position': 'right',
+        'flex_direction': 'row-reverse',
+        'bullet_margin_side': 'left',
+        'print_button_side': 'left',
+        'font_family': "'Amiri', 'Traditional Arabic', serif",
+
+        # Textes
+        'page_title': "خطة العلاج وأصل الخطأ",
+        'main_title': "تقرير خطة العلاج وأصل الخطأ",
+        'print_button_text': "طباعة التقرير",
+        'report_date_label': "تاريخ التقرير",
+        'basic_info_title': "المعلومات الأساسية",
+        'classification_title': "تصنيف المتعلمين",
+        'analysis_title': "تحليل الأخطاء واقتراح العلاج",
+        'solutions_title': "الحلول المقترحة",
+        'problems_title': "تحليل الأخطاء",
+        'group_titles': {
+            'treatment': "مجموعة العلاج",
+            'support': "مجموعة الدعم",
+            'excellence': "مجموعة التميز"
+        },
+        'student_name_label': "اسم التلميذ(ة)",
+        'group_label': "المجموعة",
+        'no_items_text': "لا توجد بيانات متاحة",
+        'footer_text': "تم إنشاء التقرير آلياً"
+    }
+
+
+# --------------------------------------------------------------------------
+# ROUTES
+# --------------------------------------------------------------------------
 @app.route('/generate-treatment-plan', methods=['POST'])
 def generate_treatment_plan():
-    try:
-        if not request.is_json:
-            return jsonify({'error': 'Content-Type must be application/json'}), 400
-            
-        data = request.get_json()
-        
-        # Validation des champs requis
-        required_fields = ['schoolName', 'profName', 'className', 
-                         'matiereName', 'baremeName', 'groups', 'solutions']
-        if not all(field in data for field in required_fields):
-            return jsonify({'error': 'Missing required fields'}), 400
+    """Génère le rapport HTML complet."""
+    if not request.is_json:
+        return jsonify({'error': 'Content-Type must be application/json'}), 400
 
-        # Unification des solutions
-        solutions_unified = unify_solutions(data)
+    data = request.get_json()
 
-        # Obtenir le contexte linguistique
-        language_context = get_language_context(data)
+    required = ['schoolName', 'profName', 'className', 'matiereName', 'baremeName', 'groups', 'solutions']
+    if any(key not in data for key in required):
+        return jsonify({'error': 'Missing required fields'}), 400
 
-        # Contexte de base
-        base_context = {
-            'date': datetime.now().strftime('%Y/%m/%d à %H:%M'),
-            'schoolName': data['schoolName'],
-            'profName': data['profName'],
-            'className': data['className'],
-            'matiereName': data['matiereName'],
-            'baremeName': data['baremeName'],
-            'sousBaremeName': data.get('sousBaremeName', ''),
-            'groups': {
-                'treatment': [{'name': name} for name in data['groups'].get('treatment', [])],
-                'support': [{'name': name} for name in data['groups'].get('support', [])],
-                'excellence': [{'name': name} for name in data['groups'].get('excellence', [])]
-            },
-            'solutions_unified': solutions_unified
+    # Fusion des solutions
+    solutions_unified = unify_solutions(data)
+
+    # Contexte linguistique
+    lang_ctx = get_language_context(data)
+
+    # Infos affichées dans le tableau des informations
+    info_items = [
+        (lang_ctx['school_label'], data['schoolName']),
+        (lang_ctx['teacher_label'], data['profName']),
+        (lang_ctx['class_label'], data['className']),
+        (lang_ctx['subject_label'], data['matiereName']),
+        (lang_ctx['criteria_label'], data['baremeName'])
+    ]
+
+    if data.get('sousBaremeName'):
+        info_items.append((lang_ctx['sub_criteria_label'], data['sousBaremeName']))
+
+    context = {
+        **lang_ctx,
+        'date': datetime.now().strftime('%Y/%m/%d à %H:%M'),
+        'info_items': info_items,
+        'groups': {
+            'treatment': [{'name': n} for n in data['groups'].get('treatment', [])],
+            'support': [{'name': n} for n in data['groups'].get('support', [])],
+            'excellence': [{'name': n} for n in data['groups'].get('excellence', [])]
+        },
+        'solution_blocks': {
+            lang_ctx['solutions_title']: solutions_unified['solution'],
+            lang_ctx['problems_title']: solutions_unified['probleme']
         }
+    }
 
-        # Fusionner les contextes
-        context = {**base_context, **language_context}
+    html = render_template_string(TREATMENT_PLAN_TEMPLATE, **context)
+    response = make_response(html)
+    response.headers['Content-Type'] = 'text/html; charset=utf-8'
+    return response
 
-        html_content = render_template_string(TREATMENT_PLAN_TEMPLATE, **context)
-        response = make_response(html_content)
-        response.headers['Content-Type'] = 'text/html; charset=utf-8'
-        return response
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
