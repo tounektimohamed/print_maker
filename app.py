@@ -25,236 +25,271 @@ TREATMENT_PLAN_TEMPLATE = '''
 
         body {
             font-family: {{ font_family }};
-            line-height: 1.8;
-            background-color: #f9f9f9;
+            line-height: 1.6;
+            background-color: white;
             color: #333;
             padding: 20px;
-            font-size: 16pt;
+            font-size: 11pt;
         }
 
         /* ====================== HEADER ====================== */
         .header {
             text-align: center;
-            padding: 25px;
-            margin: 0 auto 30px;
-            border-radius: 10px;
-            max-width: 1000px;
-            color: white;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 3px double #2c3e50;
         }
 
         .header h1 {
-            font-size: 30pt;
+            font-size: 18pt;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .header .subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
             margin-bottom: 10px;
         }
 
-        .date {
-            font-size: 14pt;
-            opacity: 0.9;
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 10pt;
+            color: #555;
         }
 
         /* ====================== SECTIONS ====================== */
         .section {
-            background: white;
-            padding: 25px;
-            margin: 0 auto 30px;
-            border-radius: 10px;
-            max-width: 1000px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
             page-break-inside: avoid;
         }
 
         .section-title {
-            font-size: 22pt;
+            font-size: 14pt;
             color: #2c3e50;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
             text-align: {{ text_align }};
-            position: relative;
         }
 
-        .section-title::after {
-            content: "";
-            position: absolute;
-            {{ section_after_position }}: 0;
-            bottom: -2px;
-            width: 150px;
-            height: 3px;
-            background: #3498db;
-        }
-
-        /* ====================== GRID ====================== */
+        /* ====================== INFO GRID ====================== */
         .info-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            background: #f9f9f9;
         }
 
         .info-label {
             font-weight: bold;
             color: #444;
-            font-size: 15pt;
+            font-size: 9pt;
             margin-bottom: 5px;
         }
 
         .info-value {
-            background: #f4f6f7;
-            padding: 12px;
-            border-radius: 8px;
-            border-{{ border_side }}: 3px solid #3498db;
-            font-size: 15pt;
+            font-size: 10pt;
         }
 
         /* ====================== GROUP TABLES ====================== */
-        .group {
-            margin-bottom: 35px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .group-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 9pt;
+        }
+
+        .group-table thead {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .group-table th {
+            padding: 10px;
+            text-align: {{ text_align }};
+            font-weight: bold;
+            border: 1px solid #2c3e50;
+        }
+
+        .group-table td {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            text-align: {{ text_align }};
+        }
+
+        .group-table tr:nth-child(even) {
+            background-color: #f8f9fa;
         }
 
         .group-title {
-            font-size: 18pt;
-            padding: 15px;
-            text-align: {{ text_align }};
-        }
-
-        .group.treatment .group-title { background: #e74c3c; color: white; }
-        .group.support .group-title   { background: #f39c12; color: white; }
-        .group.excellence .group-title { background: #2ecc71; color: white; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14pt;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-            text-align: {{ text_align }};
-        }
-
-        th {
-            background-color: #f5f5f5;
-            font-weight: bold;
-        }
-
-        tr:nth-child(even) { background-color: #fafafa; }
-
-        /* ====================== SOLUTIONS ====================== */
-        .solution-block {
-            background: #fbfcfd;
-            border-{{ border_side }}: 4px solid #9b59b6;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
-        .solution-block-title {
-            font-size: 18pt;
-            color: #9b59b6;
-            margin-bottom: 15px;
-        }
-
-        .solution-point {
-            font-size: 15pt;
-            margin: 10px 0;
-            display: flex;
-            gap: 10px;
-        }
-
-        .point-number {
-            font-weight: bold;
-            color: #9b59b6;
-        }
-
-        /* ====================== SELECTION SUMMARY ====================== */
-        .selection-summary {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            text-align: {{ text_align }};
-        }
-
-        .summary-title {
-            font-size: 18pt;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .summary-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .stat-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 20pt;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
             font-size: 12pt;
-            opacity: 0.9;
-        }
-
-        /* ====================== SOURCE BADGES ====================== */
-        .source-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 10pt;
             font-weight: bold;
-            margin: 5px;
+            margin: 15px 0 8px 0;
+            color: #2c3e50;
+            padding-{{ text_align }}: 10px;
+            border-{{ text_align }}: 3px solid;
         }
 
-        .badge-json {
+        .group-title.treatment {
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .group-title.support {
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+
+        .group-title.excellence {
+            border-color: #27ae60;
+            color: #27ae60;
+        }
+
+        /* ====================== SOLUTIONS AND PROBLEMS ====================== */
+        .content-block {
+            margin-bottom: 25px;
+        }
+
+        .block-title {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .solution-item, .problem-item {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .solution-item {
+            background-color: #f8f9fa;
+            border-{{ border_side }}: 4px solid #27ae60;
+        }
+
+        .problem-item {
+            background-color: #fff8f8;
+            border-{{ border_side }}: 4px solid #e74c3c;
+        }
+
+        .item-content {
+            font-size: 10pt;
+            line-height: 1.5;
+        }
+
+        .item-source {
+            position: absolute;
+            {{ source_position }}: 10px;
+            top: 10px;
+            font-size: 8pt;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .source-default {
             background-color: #f39c12;
             color: white;
         }
 
-        .badge-global {
-            background-color: #2ecc71;
+        .source-global {
+            background-color: #27ae60;
             color: white;
         }
 
-        .badge-personal {
+        .source-personal {
             background-color: #3498db;
             color: white;
+        }
+
+        /* ====================== SIGNATURE AREA ====================== */
+        .signature-area {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .signature-line {
+            display: inline-block;
+            width: 200px;
+            border-bottom: 1px solid #333;
+            margin: 0 30px;
+        }
+
+        .signature-label {
+            font-size: 9pt;
+            color: #555;
+            margin-top: 5px;
         }
 
         /* ====================== FOOTER ====================== */
         .footer {
             text-align: center;
-            padding-top: 20px;
-            margin: 40px auto 20px;
-            border-top: 1px solid #ccc;
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 8pt;
             color: #777;
-            font-size: 13pt;
-            max-width: 1000px;
         }
 
         /* ====================== PRINT ====================== */
         @media print {
-            @page { size: A4; margin: 0; }
-            .print-button { display: none !important; }
-            body { padding: 0; margin: 0; }
+            @page {
+                size: A4;
+                margin: 1.5cm;
+            }
+            
+            body {
+                padding: 0;
+                margin: 0;
+                font-size: 10pt;
+            }
+            
+            .print-button {
+                display: none;
+            }
+            
+            .section {
+                margin-bottom: 20px;
+            }
+            
+            .solution-item, .problem-item {
+                page-break-inside: avoid;
+            }
+        }
+
+        .print-button {
+            position: fixed;
+            top: 20px;
+            {{ print_button_position }}: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10pt;
+            z-index: 1000;
+        }
+
+        .print-button:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
@@ -266,130 +301,218 @@ TREATMENT_PLAN_TEMPLATE = '''
 
 <div class="header">
     <h1>{{ main_title }}</h1>
-    <div class="date">{{ report_date_label }}: {{ date }}</div>
-    {% if group_name %}
-    <div class="date" style="margin-top: 10px;">
-        <strong>{{ group_name_label }}:</strong> {{ group_name }}
-    </div>
-    {% endif %}
-</div>
-
-{% if selection_counts %}
-<div class="selection-summary">
-    <h2 class="summary-title">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        {{ selection_title }}
-    </h2>
-    <div class="summary-stats">
-        <div class="stat-item">
-            <div class="stat-value">{{ selection_counts.total }}</div>
-            <div class="stat-label">{{ total_selected_label }}</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">{{ selection_counts.solutions }}</div>
-            <div class="stat-label">{{ solutions_label }}</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">{{ selection_counts.problems }}</div>
-            <div class="stat-label">{{ problems_label }}</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">{{ selection_counts.json }}</div>
-            <div class="stat-label">{{ json_label }}</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">{{ selection_counts.global }}</div>
-            <div class="stat-label">{{ global_label }}</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">{{ selection_counts.personal }}</div>
-            <div class="stat-label">{{ personal_label }}</div>
-        </div>
+    <div class="subtitle">{{ report_subtitle }}</div>
+    
+    <div class="header-info">
+        <div>{{ school_label }}: {{ schoolName }}</div>
+        <div>{{ date_label }}: {{ date }}</div>
     </div>
 </div>
-{% endif %}
 
 <div class="section">
     <h2 class="section-title">{{ basic_info_title }}</h2>
+    
     <div class="info-grid">
-        {% for label, value in info_items %}
-        <div>
-            <div class="info-label">{{ label }}</div>
-            <div class="info-value">{{ value }}</div>
+        <div class="info-item">
+            <div class="info-label">{{ teacher_label }}</div>
+            <div class="info-value">{{ profName }}</div>
         </div>
-        {% endfor %}
+        
+        <div class="info-item">
+            <div class="info-label">{{ class_label }}</div>
+            <div class="info-value">{{ className }}</div>
+        </div>
+        
+        <div class="info-item">
+            <div class="info-label">{{ subject_label }}</div>
+            <div class="info-value">{{ matiereName }}</div>
+        </div>
+        
+        <div class="info-item">
+            <div class="info-label">{{ criteria_label }}</div>
+            <div class="info-value">{{ baremeName }}</div>
+        </div>
+        
+        {% if sousBaremeName %}
+        <div class="info-item">
+            <div class="info-label">{{ sub_criteria_label }}</div>
+            <div class="info-value">{{ sousBaremeName }}</div>
+        </div>
+        {% endif %}
+        
+        {% if groupName %}
+        <div class="info-item">
+            <div class="info-label">{{ group_label }}</div>
+            <div class="info-value">{{ groupName }}</div>
+        </div>
+        {% endif %}
     </div>
 </div>
 
 {% if groups and (groups.treatment or groups.support or groups.excellence) %}
 <div class="section">
     <h2 class="section-title">{{ classification_title }}</h2>
-
-    {% for group_key, group_title in group_titles.items() %}
-    {% if groups[group_key] %}
-    <div class="group {{ group_key }}">
-        <h3 class="group-title">{{ group_title }}</h3>
-
-        <table>
+    
+    {% if groups.treatment %}
+    <div>
+        <h3 class="group-title treatment">{{ treatment_group_label }}</h3>
+        <table class="group-table">
             <thead>
                 <tr>
-                    <th>{{ student_name_label }}</th>
-                    <th>{{ group_label }}</th>
+                    <th style="width: 80%">{{ student_name_label }}</th>
+                    <th style="width: 20%">{{ level_label }}</th>
                 </tr>
             </thead>
             <tbody>
-                {% for student in groups[group_key] %}
+                {% for student in groups.treatment %}
                 <tr>
                     <td>{{ student.name }}</td>
-                    <td>{{ group_title }}</td>
+                    <td>{{ treatment_level_label }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
     {% endif %}
-    {% endfor %}
+    
+    {% if groups.support %}
+    <div>
+        <h3 class="group-title support">{{ support_group_label }}</h3>
+        <table class="group-table">
+            <thead>
+                <tr>
+                    <th style="width: 80%">{{ student_name_label }}</th>
+                    <th style="width: 20%">{{ level_label }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in groups.support %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ support_level_label }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    
+    {% if groups.excellence %}
+    <div>
+        <h3 class="group-title excellence">{{ excellence_group_label }}</h3>
+        <table class="group-table">
+            <thead>
+                <tr>
+                    <th style="width: 80%">{{ student_name_label }}</th>
+                    <th style="width: 20%">{{ level_label }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in groups.excellence %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ excellence_level_label }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
 </div>
 {% endif %}
 
 <div class="section">
     <h2 class="section-title">{{ analysis_title }}</h2>
-
-    {% for block_title, items in solution_blocks.items() %}
-    {% if items %}
-    <div class="solution-block">
-        <h3 class="solution-block-title">{{ block_title }}</h3>
-
-        {% for item in items %}
-        <div class="solution-point">
-            <span class="point-number">{{ loop.index }}.</span>
-            <span class="point-content">{{ item.text }}</span>
-            {% if item.source %}
-            <span class="source-badge badge-{{ item.source }}">
-                {{ item.source_label }}
-            </span>
-            {% endif %}
-            {% if item.is_problem %}
-            <span class="source-badge" style="background-color: #e74c3c; color: white;">
-                {{ problem_label }}
-            </span>
-            {% else %}
-            <span class="source-badge" style="background-color: #2ecc71; color: white;">
-                {{ solution_label }}
-            </span>
-            {% endif %}
-        </div>
-        {% endfor %}
+    
+    <div class="content-block">
+        <h3 class="block-title">{{ solutions_title }}</h3>
+        
+        {% if solutions %}
+            {% for item in solutions %}
+            <div class="solution-item">
+                {% if item.source %}
+                <div class="item-source source-{{ item.source }}">
+                    {{ item.source_label }}
+                </div>
+                {% endif %}
+                <div class="item-content">
+                    {{ loop.index }}. {{ item.text }}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; color: #777; font-style: italic; padding: 20px;">
+                {{ no_solutions_text }}
+            </div>
+        {% endif %}
     </div>
-    {% endif %}
-    {% endfor %}
+    
+    <div class="content-block">
+        <h3 class="block-title">{{ problems_title }}</h3>
+        
+        {% if problems %}
+            {% for item in problems %}
+            <div class="problem-item">
+                {% if item.source %}
+                <div class="item-source source-{{ item.source }}">
+                    {{ item.source_label }}
+                </div>
+                {% endif %}
+                <div class="item-content">
+                    {{ loop.index }}. {{ item.text }}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; color: #777; font-style: italic; padding: 20px;">
+                {{ no_problems_text }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="signature-area" style="text-align: {{ text_align }};">
+    <div style="display: inline-block; text-align: center; margin: 0 50px;">
+        <div class="signature-line"></div>
+        <div class="signature-label">{{ signature_label }}</div>
+    </div>
+    
+    <div style="display: inline-block; text-align: center; margin: 0 50px;">
+        <div class="signature-line"></div>
+        <div class="signature-label">{{ date_label }}</div>
+    </div>
 </div>
 
 <div class="footer">
-    <p>{{ footer_text }} © {{ date[:4] }}</p>
+    <p>{{ footer_text }}</p>
+    <p>{{ page_label }}: <span class="page-number"></span></p>
 </div>
+
+<script>
+    // Numérotation des pages
+    document.addEventListener('DOMContentLoaded', function() {
+        const pageNumbers = document.querySelectorAll('.page-number');
+        pageNumbers.forEach(el => {
+            el.textContent = '1/1';
+        });
+        
+        // Ajouter les sauts de page si nécessaire
+        const items = document.querySelectorAll('.solution-item, .problem-item');
+        let pageHeight = 0;
+        const maxPageHeight = 900; // Hauteur approximative d'une page A4 en pixels
+        
+        items.forEach((item, index) => {
+            const itemHeight = item.offsetHeight;
+            if (pageHeight + itemHeight > maxPageHeight && index > 0) {
+                item.style.pageBreakBefore = 'always';
+                item.style.marginTop = '30px';
+                pageHeight = itemHeight;
+            } else {
+                pageHeight += itemHeight;
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
@@ -403,9 +526,12 @@ def clean_text(text):
     """Nettoyer le texte des caractères indésirables"""
     if not text:
         return ""
-    unwanted = ['ـ', '●', '★']
+    # Supprimer les caractères spéciaux inutiles
+    unwanted = ['ـ', '●', '★', '◆', '■', '▲', '»', '«']
     for u in unwanted:
         text = text.replace(u, '')
+    # Nettoyer les espaces multiples
+    text = ' '.join(text.split())
     return text.strip()
 
 
@@ -440,59 +566,56 @@ def get_language_context(data):
             'text_direction': 'ltr',
             'text_align': 'left',
             'border_side': 'left',
-            'section_after_position': 'left',
-            'flex_direction': 'row',
-            'bullet_margin_side': 'right',
-            'font_family': "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+            'source_position': 'right',
+            'print_button_position': 'right',
+            'font_family': "'Calibri', 'Arial', sans-serif",
 
             # Texts
-            'page_title': "Plan de traitement et origine de l'erreur",
-            'main_title': "Rapport du Plan de Traitement",
+            'page_title': "Rapport Pédagogique - Plan de Traitement",
+            'main_title': "RAPPORT PÉDAGOGIQUE",
+            'report_subtitle': "Plan de traitement et analyse des difficultés",
             'print_button_text': "Imprimer",
-            'report_date_label': "Date du rapport",
-            'basic_info_title': "Informations générales",
-            'classification_title': "Classification des apprenants",
-            'analysis_title': "Analyse des erreurs et propositions",
-            'selection_title': "Résumé de la sélection",
-            'solutions_title': "Solutions proposées",
-            'problems_title': "Analyse des erreurs",
+            'basic_info_title': "INFORMATIONS GÉNÉRALES",
+            'classification_title': "CLASSIFICATION DES APPRENANTS",
+            'analysis_title': "ANALYSE ET PROPOSITIONS",
+            'solutions_title': "SOLUTIONS PROPOSÉES",
+            'problems_title': "ANALYSE DES DIFFICULTÉS",
 
             # Labels
             'school_label': "Établissement",
             'teacher_label': "Enseignant(e)",
             'class_label': "Classe",
             'subject_label': "Matière",
-            'criteria_label': "Barème",
-            'sub_criteria_label': "Sous-barème",
-            'group_name_label': "Groupe",
-
-            'group_titles': {
-                'treatment': "Groupe de traitement",
-                'support': "Groupe de soutien",
-                'excellence': "Groupe d'excellence"
-            },
-            
-            'student_name_label': "Nom de l'élève",
+            'criteria_label': "Critère d'évaluation",
+            'sub_criteria_label': "Sous-critère",
             'group_label': "Groupe",
-            'no_items_text': "Aucune donnée disponible",
-            'footer_text': "Rapport généré automatiquement",
+            'date_label': "Date",
+            'student_name_label': "Nom de l'apprenant",
+            'level_label': "Niveau",
             
-            # Nouveaux labels pour la sélection
-            'total_selected_label': "Éléments sélectionnés",
-            'solutions_label': "Solutions",
-            'problems_label': "Problèmes",
-            'json_label': "Recommandés",
-            'global_label': "Approuvés",
-            'personal_label': "Personnels",
+            # Group labels
+            'treatment_group_label': "GROUPE DE TRAITEMENT",
+            'support_group_label': "GROUPE DE SOUTIEN", 
+            'excellence_group_label': "GROUPE D'EXCELLENCE",
+            'treatment_level_label': "Traitement",
+            'support_level_label': "Soutien",
+            'excellence_level_label': "Excellence",
             
-            # Labels des sources
-            'json_source_label': "Recommandé",
-            'global_source_label': "Approuvé",
-            'personal_source_label': "Personnel",
+            # Source labels
+            'source_default_label': "Recommandation",
+            'source_global_label': "Approuvé",
+            'source_personal_label': "Personnel",
             
-            # Labels type
-            'solution_label': "Solution",
-            'problem_label': "Problème"
+            # Empty states
+            'no_solutions_text': "Aucune solution proposée",
+            'no_problems_text': "Aucune difficulté identifiée",
+            
+            # Signature
+            'signature_label': "Signature et cachet",
+            
+            # Footer
+            'footer_text': "Document administratif - Usage pédagogique interne",
+            'page_label': "Page"
         }
 
     # Arabic
@@ -501,58 +624,55 @@ def get_language_context(data):
         'text_direction': 'rtl',
         'text_align': 'right',
         'border_side': 'right',
-        'section_after_position': 'right',
-        'flex_direction': 'row-reverse',
-        'bullet_margin_side': 'left',
-        'font_family': "'Amiri', 'Traditional Arabic', serif",
+        'source_position': 'left',
+        'print_button_position': 'left',
+        'font_family': "'Traditional Arabic', 'Arial', sans-serif",
 
-        'page_title': "خطة العلاج وأصل الخطأ",
-        'main_title': "تقرير خطة العلاج",
+        'page_title': "تقرير تربوي - خطة العلاج",
+        'main_title': "تقرير تربوي",
+        'report_subtitle': "خطة العلاج وتحليل الصعوبات",
         'print_button_text': "طباعة",
-        'report_date_label': "تاريخ التقرير",
-        'basic_info_title': "المعلومات الأساسية",
+        'basic_info_title': "المعلومات العامة",
         'classification_title': "تصنيف المتعلمين",
-        'analysis_title': "تحليل الأخطاء والاقتراحات",
-        'selection_title': "ملخص التحديد",
+        'analysis_title': "التحليل والاقتراحات",
         'solutions_title': "الحلول المقترحة",
-        'problems_title': "تحليل الأخطاء",
+        'problems_title': "تحليل الصعوبات",
 
         # Labels
         'school_label': "المؤسسة",
         'teacher_label': "الأستاذ(ة)",
-        'class_label': "المستوى",
+        'class_label': "القسم",
         'subject_label': "المادة",
-        'criteria_label': "المعيار",
+        'criteria_label': "معيار التقويم",
         'sub_criteria_label': "المعيار الفرعي",
-        'group_name_label': "المجموعة",
-
-        'group_titles': {
-            'treatment': "مجموعة العلاج",
-            'support': "مجموعة الدعم",
-            'excellence': "مجموعة التميز"
-        },
-        
-        'student_name_label': "اسم المتعلم(ة)",
         'group_label': "المجموعة",
-        'no_items_text': "لا توجد بيانات",
-        'footer_text': "تم إنشاء التقرير تلقائياً",
+        'date_label': "التاريخ",
+        'student_name_label': "اسم المتعلم",
+        'level_label': "المستوى",
         
-        # Nouveaux labels pour la sélection
-        'total_selected_label': "العناصر المحددة",
-        'solutions_label': "حلول",
-        'problems_label': "مشاكل",
-        'json_label': "موصى بها",
-        'global_label': "معتمدة",
-        'personal_label': "شخصية",
+        # Group labels
+        'treatment_group_label': "مجموعة العلاج",
+        'support_group_label': "مجموعة الدعم",
+        'excellence_group_label': "مجموعة التميز",
+        'treatment_level_label': "علاج",
+        'support_level_label': "دعم",
+        'excellence_level_label': "تميز",
         
-        # Labels des sources
-        'json_source_label': "موصى به",
-        'global_source_label': "معتمد",
-        'personal_source_label': "شخصي",
+        # Source labels
+        'source_default_label': "موصى به",
+        'source_global_label': "معتمد",
+        'source_personal_label': "شخصي",
         
-        # Labels type
-        'solution_label': "حل",
-        'problem_label': "مشكلة"
+        # Empty states
+        'no_solutions_text': "لا توجد حلول مقترحة",
+        'no_problems_text': "لا توجد صعوبات محددة",
+        
+        # Signature
+        'signature_label': "التوقيع والختم",
+        
+        # Footer
+        'footer_text': "وثيقة إدارية - للاستخدام التربوي الداخلي",
+        'page_label': "صفحة"
     }
 
 
@@ -575,171 +695,140 @@ def generate_treatment_plan():
     # Contexte linguistique
     lang_ctx = get_language_context(data)
 
-    # Info affichées
-    info_items = [
-        (lang_ctx['school_label'], data['schoolName']),
-        (lang_ctx['teacher_label'], data['profName']),
-        (lang_ctx['class_label'], data['className']),
-        (lang_ctx['subject_label'], data['matiereName']),
-        (lang_ctx['criteria_label'], data['baremeName'])
-    ]
-
-    if data.get('sousBaremeName'):
-        info_items.append(
-            (lang_ctx['sub_criteria_label'], data['sousBaremeName'])
-        )
-
     # Initialiser le contexte
     context = {
         **lang_ctx,
-        'date': datetime.now().strftime('%Y/%m/%d %H:%M'),
-        'info_items': info_items,
+        'date': datetime.now().strftime('%d/%m/%Y'),
+        'schoolName': data['schoolName'],
+        'profName': data['profName'],
+        'className': data['className'],
+        'matiereName': data['matiereName'],
+        'baremeName': data['baremeName'],
+        'sousBaremeName': data.get('sousBaremeName', ''),
+        'groupName': data.get('groupName', '')
     }
 
     # Gestion des groupes d'étudiants
+    groups = {
+        'treatment': [],
+        'support': [],
+        'excellence': []
+    }
+    
     if 'groups' in data:
-        context['groups'] = {
+        groups = {
             'treatment': [{'name': n} for n in data['groups'].get('treatment', [])],
             'support': [{'name': n} for n in data['groups'].get('support', [])],
             'excellence': [{'name': n} for n in data['groups'].get('excellence', [])]
         }
-    else:
-        context['groups'] = {
-            'treatment': [],
-            'support': [],
-            'excellence': []
-        }
+    
+    context['groups'] = groups
 
-    # Gestion du nom du groupe
-    if 'groupName' in data:
-        context['group_name'] = data['groupName']
-
-    # Gestion des sélections (mode personnalisé)
+    # Préparation des solutions et problèmes
+    solutions = []
+    problems = []
+    
+    # Mode sélection personnalisée
     if 'selectedItems' in data:
-        # Mode personnalisé : seulement les éléments sélectionnés
-        context['selection_counts'] = data.get('selectionCounts', {})
-        
-        # Organiser les éléments par type (solution/problème)
-        solution_blocks = {}
-        
         # Solutions sélectionnées
-        selected_solutions = data['selectedItems'].get('solutions', [])
-        if selected_solutions:
-            solution_items = []
-            for sol in selected_solutions:
-                # Vérifier si c'est un dict avec source ou juste une string
-                if isinstance(sol, dict):
-                    solution_items.append({
-                        'text': clean_text(sol.get('text', sol.get('solution', ''))),
-                        'source': sol.get('source', 'json'),
-                        'source_label': lang_ctx.get(f"{sol.get('source', 'json')}_source_label", ""),
-                        'is_problem': False
-                    })
-                else:
-                    solution_items.append({
-                        'text': clean_text(sol),
-                        'source': 'json',
-                        'source_label': lang_ctx.get('json_source_label', ""),
-                        'is_problem': False
-                    })
+        for sol in data['selectedItems'].get('solutions', []):
+            if isinstance(sol, dict):
+                text = sol.get('text', sol.get('solution', ''))
+                source = sol.get('source', 'default')
+            else:
+                text = sol
+                source = 'default'
             
-            if solution_items:
-                solution_blocks[lang_ctx['solutions_title']] = solution_items
+            cleaned_text = clean_text(text)
+            if cleaned_text:
+                solutions.append({
+                    'text': cleaned_text,
+                    'source': source,
+                    'source_label': lang_ctx.get(f'source_{source}_label', '')
+                })
         
         # Problèmes sélectionnés
-        selected_problems = data['selectedItems'].get('problems', [])
-        if selected_problems:
-            problem_items = []
-            for prob in selected_problems:
-                if isinstance(prob, dict):
-                    problem_items.append({
-                        'text': clean_text(prob.get('text', prob.get('probleme', ''))),
-                        'source': prob.get('source', 'json'),
-                        'source_label': lang_ctx.get(f"{prob.get('source', 'json')}_source_label", ""),
-                        'is_problem': True
-                    })
-                else:
-                    problem_items.append({
-                        'text': clean_text(prob),
-                        'source': 'json',
-                        'source_label': lang_ctx.get('json_source_label', ""),
-                        'is_problem': True
-                    })
+        for prob in data['selectedItems'].get('problems', []):
+            if isinstance(prob, dict):
+                text = prob.get('text', prob.get('probleme', ''))
+                source = prob.get('source', 'default')
+            else:
+                text = prob
+                source = 'default'
             
-            if problem_items:
-                solution_blocks[lang_ctx['problems_title']] = problem_items
-        
-        context['solution_blocks'] = solution_blocks
-        
-    else:
-        # Mode complet : toutes les solutions fusionnées
-        if 'solutions' in data:
-            # Organiser les solutions par source
-            all_solutions = []
-            all_problems = []
-            
-            # Solutions par défaut (JSON)
-            default = data['solutions'].get('default', {})
-            if default.get('solution'):
-                all_solutions.append({
-                    'text': clean_text(default['solution']),
-                    'source': 'json',
-                    'source_label': lang_ctx.get('json_source_label', ""),
-                    'is_problem': False
+            cleaned_text = clean_text(text)
+            if cleaned_text:
+                problems.append({
+                    'text': cleaned_text,
+                    'source': source,
+                    'source_label': lang_ctx.get(f'source_{source}_label', '')
                 })
-            if default.get('probleme'):
-                all_problems.append({
-                    'text': clean_text(default['probleme']),
-                    'source': 'json',
-                    'source_label': lang_ctx.get('json_source_label', ""),
-                    'is_problem': True
+    
+    # Mode complet (toutes les données)
+    elif 'solutions' in data:
+        # Solutions par défaut
+        default = data['solutions'].get('default', {})
+        if default.get('solution'):
+            cleaned = clean_text(default['solution'])
+            if cleaned:
+                solutions.append({
+                    'text': cleaned,
+                    'source': 'default',
+                    'source_label': lang_ctx.get('source_default_label', '')
                 })
-            
-            # Propositions utilisateur
-            user_proposals = data['solutions'].get('userProposals', [])
-            for proposal in user_proposals:
-                if proposal.get('solution'):
-                    all_solutions.append({
-                        'text': clean_text(proposal['solution']),
+        
+        if default.get('probleme'):
+            cleaned = clean_text(default['probleme'])
+            if cleaned:
+                problems.append({
+                    'text': cleaned,
+                    'source': 'default',
+                    'source_label': lang_ctx.get('source_default_label', '')
+                })
+        
+        # Propositions utilisateur
+        for proposal in data['solutions'].get('userProposals', []):
+            if proposal.get('solution'):
+                cleaned = clean_text(proposal['solution'])
+                if cleaned:
+                    solutions.append({
+                        'text': cleaned,
                         'source': 'personal',
-                        'source_label': lang_ctx.get('personal_source_label', ""),
-                        'is_problem': False
+                        'source_label': lang_ctx.get('source_personal_label', '')
                     })
-                if proposal.get('probleme'):
-                    all_problems.append({
-                        'text': clean_text(proposal['probleme']),
+            
+            if proposal.get('probleme'):
+                cleaned = clean_text(proposal['probleme'])
+                if cleaned:
+                    problems.append({
+                        'text': cleaned,
                         'source': 'personal',
-                        'source_label': lang_ctx.get('personal_source_label', ""),
-                        'is_problem': True
+                        'source_label': lang_ctx.get('source_personal_label', '')
+                    })
+        
+        # Propositions globales
+        for proposal in data['solutions'].get('globalProposals', []):
+            if proposal.get('solution'):
+                cleaned = clean_text(proposal['solution'])
+                if cleaned:
+                    solutions.append({
+                        'text': cleaned,
+                        'source': 'global',
+                        'source_label': lang_ctx.get('source_global_label', '')
                     })
             
-            # Propositions globales
-            global_proposals = data['solutions'].get('globalProposals', [])
-            for proposal in global_proposals:
-                if proposal.get('solution'):
-                    all_solutions.append({
-                        'text': clean_text(proposal['solution']),
+            if proposal.get('probleme'):
+                cleaned = clean_text(proposal['probleme'])
+                if cleaned:
+                    problems.append({
+                        'text': cleaned,
                         'source': 'global',
-                        'source_label': lang_ctx.get('global_source_label', ""),
-                        'is_problem': False
+                        'source_label': lang_ctx.get('source_global_label', '')
                     })
-                if proposal.get('probleme'):
-                    all_problems.append({
-                        'text': clean_text(proposal['probleme']),
-                        'source': 'global',
-                        'source_label': lang_ctx.get('global_source_label', ""),
-                        'is_problem': True
-                    })
-            
-            context['solution_blocks'] = {
-                lang_ctx['solutions_title']: all_solutions,
-                lang_ctx['problems_title']: all_problems
-            }
-        else:
-            context['solution_blocks'] = {
-                lang_ctx['solutions_title']: [],
-                lang_ctx['problems_title']: []
-            }
+
+    # Ajouter au contexte
+    context['solutions'] = solutions
+    context['problems'] = problems
 
     # Générer le HTML
     html = render_template_string(TREATMENT_PLAN_TEMPLATE, **context)
@@ -749,4 +838,4 @@ def generate_treatment_plan():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
