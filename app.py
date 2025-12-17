@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)
 
 # --------------------------------------------------------------------------
-# TEMPLATE HTML PRINCIPAL
+# TEMPLATE HTML PRINCIPAL SIMPLIFIÉ
 # --------------------------------------------------------------------------
 TREATMENT_PLAN_TEMPLATE = '''
 <!DOCTYPE html>
@@ -14,7 +14,6 @@ TREATMENT_PLAN_TEMPLATE = '''
 <head>
     <meta charset="UTF-8">
     <title>{{ page_title }}</title>
-
     <style>
         /* ====================== RESET ====================== */
         * {
@@ -29,7 +28,7 @@ TREATMENT_PLAN_TEMPLATE = '''
             background-color: white;
             color: #333;
             padding: 20px;
-            font-size: 11pt;
+            font-size: 12pt;
         }
 
         /* ====================== HEADER ====================== */
@@ -47,12 +46,6 @@ TREATMENT_PLAN_TEMPLATE = '''
             font-weight: bold;
         }
 
-        .header .subtitle {
-            font-size: 14pt;
-            color: #7f8c8d;
-            margin-bottom: 10px;
-        }
-
         .header-info {
             display: flex;
             justify-content: space-between;
@@ -61,28 +54,12 @@ TREATMENT_PLAN_TEMPLATE = '''
             color: #555;
         }
 
-        /* ====================== SECTIONS ====================== */
-        .section {
-            margin-bottom: 25px;
-            page-break-inside: avoid;
-        }
-
-        .section-title {
-            font-size: 14pt;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #ddd;
-            font-weight: bold;
-            text-align: {{ text_align }};
-        }
-
         /* ====================== INFO GRID ====================== */
         .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .info-item {
@@ -103,58 +80,20 @@ TREATMENT_PLAN_TEMPLATE = '''
             font-size: 10pt;
         }
 
-        /* ====================== GROUP TABLES ====================== */
-        .group-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 9pt;
+        /* ====================== SECTIONS ====================== */
+        .section {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
         }
 
-        .group-table thead {
-            background-color: #2c3e50;
-            color: white;
-        }
-
-        .group-table th {
-            padding: 10px;
-            text-align: {{ text_align }};
-            font-weight: bold;
-            border: 1px solid #2c3e50;
-        }
-
-        .group-table td {
-            padding: 8px 10px;
-            border: 1px solid #ddd;
-            text-align: {{ text_align }};
-        }
-
-        .group-table tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-
-        .group-title {
-            font-size: 12pt;
-            font-weight: bold;
-            margin: 15px 0 8px 0;
+        .section-title {
+            font-size: 14pt;
             color: #2c3e50;
-            padding-{{ text_align }}: 10px;
-            border-{{ text_align }}: 3px solid;
-        }
-
-        .group-title.treatment {
-            border-color: #e74c3c;
-            color: #e74c3c;
-        }
-
-        .group-title.support {
-            border-color: #f39c12;
-            color: #f39c12;
-        }
-
-        .group-title.excellence {
-            border-color: #27ae60;
-            color: #27ae60;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #3498db;
+            font-weight: bold;
+            text-align: {{ text_align }};
         }
 
         /* ====================== SOLUTIONS AND PROBLEMS ====================== */
@@ -163,66 +102,48 @@ TREATMENT_PLAN_TEMPLATE = '''
         }
 
         .block-title {
-            font-size: 12pt;
+            font-size: 13pt;
             font-weight: bold;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             color: #2c3e50;
-            padding-bottom: 5px;
-            border-bottom: 2px solid #3498db;
+        }
+
+        .item-list {
+            list-style-type: none;
+            padding: 0;
         }
 
         .solution-item, .problem-item {
             margin-bottom: 15px;
-            padding: 12px;
+            padding: 15px;
             border-radius: 4px;
+            border-{{ border_side }}: 4px solid;
+            text-align: {{ text_align }};
             position: relative;
         }
 
         .solution-item {
-            background-color: #f8f9fa;
-            border-{{ border_side }}: 4px solid #27ae60;
+            background-color: #f8fff8;
+            border-color: #27ae60;
         }
 
         .problem-item {
             background-color: #fff8f8;
-            border-{{ border_side }}: 4px solid #e74c3c;
+            border-color: #e74c3c;
         }
 
-        .item-content {
-            font-size: 10pt;
-            line-height: 1.5;
+        .item-text {
+            font-size: 11pt;
+            line-height: 1.6;
+            margin-bottom: 5px;
         }
 
-        .item-source {
-            position: absolute;
-            {{ source_position }}: 10px;
-            top: 10px;
-            font-size: 8pt;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        .source-default {
-            background-color: #f39c12;
-            color: white;
-        }
-
-        .source-global {
-            background-color: #27ae60;
-            color: white;
-        }
-
-        .source-personal {
-            background-color: #3498db;
-            color: white;
-        }
-
-        /* ====================== SIGNATURE AREA ====================== */
+        /* ====================== SIGNATURE ====================== */
         .signature-area {
-            margin-top: 40px;
+            margin-top: 50px;
             padding-top: 20px;
             border-top: 1px solid #ddd;
+            text-align: {{ text_align }};
         }
 
         .signature-line {
@@ -238,16 +159,6 @@ TREATMENT_PLAN_TEMPLATE = '''
             margin-top: 5px;
         }
 
-        /* ====================== FOOTER ====================== */
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 10px;
-            border-top: 1px solid #ddd;
-            font-size: 8pt;
-            color: #777;
-        }
-
         /* ====================== PRINT ====================== */
         @media print {
             @page {
@@ -258,19 +169,11 @@ TREATMENT_PLAN_TEMPLATE = '''
             body {
                 padding: 0;
                 margin: 0;
-                font-size: 10pt;
+                font-size: 11pt;
             }
             
             .print-button {
                 display: none;
-            }
-            
-            .section {
-                margin-bottom: 20px;
-            }
-            
-            .solution-item, .problem-item {
-                page-break-inside: avoid;
             }
         }
 
@@ -301,8 +204,6 @@ TREATMENT_PLAN_TEMPLATE = '''
 
 <div class="header">
     <h1>{{ main_title }}</h1>
-    <div class="subtitle">{{ report_subtitle }}</div>
-    
     <div class="header-info">
         <div>{{ school_label }}: {{ schoolName }}</div>
         <div>{{ date_label }}: {{ date }}</div>
@@ -349,129 +250,35 @@ TREATMENT_PLAN_TEMPLATE = '''
     </div>
 </div>
 
-{% if groups and (groups.treatment or groups.support or groups.excellence) %}
+{% if solutions %}
 <div class="section">
-    <h2 class="section-title">{{ classification_title }}</h2>
+    <h2 class="section-title">{{ solutions_title }}</h2>
     
-    {% if groups.treatment %}
-    <div>
-        <h3 class="group-title treatment">{{ treatment_group_label }}</h3>
-        <table class="group-table">
-            <thead>
-                <tr>
-                    <th style="width: 80%">{{ student_name_label }}</th>
-                    <th style="width: 20%">{{ level_label }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for student in groups.treatment %}
-                <tr>
-                    <td>{{ student.name }}</td>
-                    <td>{{ treatment_level_label }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-    
-    {% if groups.support %}
-    <div>
-        <h3 class="group-title support">{{ support_group_label }}</h3>
-        <table class="group-table">
-            <thead>
-                <tr>
-                    <th style="width: 80%">{{ student_name_label }}</th>
-                    <th style="width: 20%">{{ level_label }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for student in groups.support %}
-                <tr>
-                    <td>{{ student.name }}</td>
-                    <td>{{ support_level_label }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
-    
-    {% if groups.excellence %}
-    <div>
-        <h3 class="group-title excellence">{{ excellence_group_label }}</h3>
-        <table class="group-table">
-            <thead>
-                <tr>
-                    <th style="width: 80%">{{ student_name_label }}</th>
-                    <th style="width: 20%">{{ level_label }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for student in groups.excellence %}
-                <tr>
-                    <td>{{ student.name }}</td>
-                    <td>{{ excellence_level_label }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% endif %}
+    <ul class="item-list">
+        {% for item in solutions %}
+        <li class="solution-item">
+            <div class="item-text">{{ item.text }}</div>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 {% endif %}
 
+{% if problems %}
 <div class="section">
-    <h2 class="section-title">{{ analysis_title }}</h2>
+    <h2 class="section-title">{{ problems_title }}</h2>
     
-    <div class="content-block">
-        <h3 class="block-title">{{ solutions_title }}</h3>
-        
-        {% if solutions %}
-            {% for item in solutions %}
-            <div class="solution-item">
-                {% if item.source %}
-                <div class="item-source source-{{ item.source }}">
-                    {{ item.source_label }}
-                </div>
-                {% endif %}
-                <div class="item-content">
-                    {{ loop.index }}. {{ item.text }}
-                </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div style="text-align: center; color: #777; font-style: italic; padding: 20px;">
-                {{ no_solutions_text }}
-            </div>
-        {% endif %}
-    </div>
-    
-    <div class="content-block">
-        <h3 class="block-title">{{ problems_title }}</h3>
-        
-        {% if problems %}
-            {% for item in problems %}
-            <div class="problem-item">
-                {% if item.source %}
-                <div class="item-source source-{{ item.source }}">
-                    {{ item.source_label }}
-                </div>
-                {% endif %}
-                <div class="item-content">
-                    {{ loop.index }}. {{ item.text }}
-                </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div style="text-align: center; color: #777; font-style: italic; padding: 20px;">
-                {{ no_problems_text }}
-            </div>
-        {% endif %}
-    </div>
+    <ul class="item-list">
+        {% for item in problems %}
+        <li class="problem-item">
+            <div class="item-text">{{ item.text }}</div>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
+{% endif %}
 
-<div class="signature-area" style="text-align: {{ text_align }};">
+<div class="signature-area">
     <div style="display: inline-block; text-align: center; margin: 0 50px;">
         <div class="signature-line"></div>
         <div class="signature-label">{{ signature_label }}</div>
@@ -482,37 +289,6 @@ TREATMENT_PLAN_TEMPLATE = '''
         <div class="signature-label">{{ date_label }}</div>
     </div>
 </div>
-
-<div class="footer">
-    <p>{{ footer_text }}</p>
-    <p>{{ page_label }}: <span class="page-number"></span></p>
-</div>
-
-<script>
-    // Numérotation des pages
-    document.addEventListener('DOMContentLoaded', function() {
-        const pageNumbers = document.querySelectorAll('.page-number');
-        pageNumbers.forEach(el => {
-            el.textContent = '1/1';
-        });
-        
-        // Ajouter les sauts de page si nécessaire
-        const items = document.querySelectorAll('.solution-item, .problem-item');
-        let pageHeight = 0;
-        const maxPageHeight = 900; // Hauteur approximative d'une page A4 en pixels
-        
-        items.forEach((item, index) => {
-            const itemHeight = item.offsetHeight;
-            if (pageHeight + itemHeight > maxPageHeight && index > 0) {
-                item.style.pageBreakBefore = 'always';
-                item.style.marginTop = '30px';
-                pageHeight = itemHeight;
-            } else {
-                pageHeight += itemHeight;
-            }
-        });
-    });
-</script>
 
 </body>
 </html>
@@ -566,18 +342,14 @@ def get_language_context(data):
             'text_direction': 'ltr',
             'text_align': 'left',
             'border_side': 'left',
-            'source_position': 'right',
             'print_button_position': 'right',
             'font_family': "'Calibri', 'Arial', sans-serif",
 
             # Texts
             'page_title': "Rapport Pédagogique - Plan de Traitement",
             'main_title': "RAPPORT PÉDAGOGIQUE",
-            'report_subtitle': "Plan de traitement et analyse des difficultés",
             'print_button_text': "Imprimer",
             'basic_info_title': "INFORMATIONS GÉNÉRALES",
-            'classification_title': "CLASSIFICATION DES APPRENANTS",
-            'analysis_title': "ANALYSE ET PROPOSITIONS",
             'solutions_title': "SOLUTIONS PROPOSÉES",
             'problems_title': "ANALYSE DES DIFFICULTÉS",
 
@@ -590,32 +362,7 @@ def get_language_context(data):
             'sub_criteria_label': "Sous-critère",
             'group_label': "Groupe",
             'date_label': "Date",
-            'student_name_label': "Nom de l'apprenant",
-            'level_label': "Niveau",
-            
-            # Group labels
-            'treatment_group_label': "GROUPE DE TRAITEMENT",
-            'support_group_label': "GROUPE DE SOUTIEN", 
-            'excellence_group_label': "GROUPE D'EXCELLENCE",
-            'treatment_level_label': "Traitement",
-            'support_level_label': "Soutien",
-            'excellence_level_label': "Excellence",
-            
-            # Source labels
-            'source_default_label': "Recommandation",
-            'source_global_label': "Approuvé",
-            'source_personal_label': "Personnel",
-            
-            # Empty states
-            'no_solutions_text': "Aucune solution proposée",
-            'no_problems_text': "Aucune difficulté identifiée",
-            
-            # Signature
             'signature_label': "Signature et cachet",
-            
-            # Footer
-            'footer_text': "Document administratif - Usage pédagogique interne",
-            'page_label': "Page"
         }
 
     # Arabic
@@ -624,17 +371,13 @@ def get_language_context(data):
         'text_direction': 'rtl',
         'text_align': 'right',
         'border_side': 'right',
-        'source_position': 'left',
         'print_button_position': 'left',
         'font_family': "'Traditional Arabic', 'Arial', sans-serif",
 
         'page_title': "تقرير تربوي - خطة العلاج",
         'main_title': "تقرير تربوي",
-        'report_subtitle': "خطة العلاج وتحليل الصعوبات",
         'print_button_text': "طباعة",
         'basic_info_title': "المعلومات العامة",
-        'classification_title': "تصنيف المتعلمين",
-        'analysis_title': "التحليل والاقتراحات",
         'solutions_title': "الحلول المقترحة",
         'problems_title': "تحليل الصعوبات",
 
@@ -647,37 +390,12 @@ def get_language_context(data):
         'sub_criteria_label': "المعيار الفرعي",
         'group_label': "المجموعة",
         'date_label': "التاريخ",
-        'student_name_label': "اسم المتعلم",
-        'level_label': "المستوى",
-        
-        # Group labels
-        'treatment_group_label': "مجموعة العلاج",
-        'support_group_label': "مجموعة الدعم",
-        'excellence_group_label': "مجموعة التميز",
-        'treatment_level_label': "علاج",
-        'support_level_label': "دعم",
-        'excellence_level_label': "تميز",
-        
-        # Source labels
-        'source_default_label': "موصى به",
-        'source_global_label': "معتمد",
-        'source_personal_label': "شخصي",
-        
-        # Empty states
-        'no_solutions_text': "لا توجد حلول مقترحة",
-        'no_problems_text': "لا توجد صعوبات محددة",
-        
-        # Signature
         'signature_label': "التوقيع والختم",
-        
-        # Footer
-        'footer_text': "وثيقة إدارية - للاستخدام التربوي الداخلي",
-        'page_label': "صفحة"
     }
 
 
 # --------------------------------------------------------------------------
-# ROUTE PRINCIPALE
+# ROUTE PRINCIPALE SIMPLIFIÉE
 # --------------------------------------------------------------------------
 @app.route('/generate-treatment-plan', methods=['POST'])
 def generate_treatment_plan():
@@ -686,6 +404,13 @@ def generate_treatment_plan():
         return jsonify({'error': 'Content-Type must be application/json'}), 400
 
     data = request.get_json()
+    
+    print("📥 Données reçues:")
+    print(f"   - École: {data.get('schoolName')}")
+    print(f"   - Professeur: {data.get('profName')}")
+    print(f"   - Classe: {data.get('className')}")
+    print(f"   - Matière: {data.get('matiereName')}")
+    print(f"   - Groupe: {data.get('groupName', 'Non spécifié')}")
 
     # Vérification des champs requis
     required = ['schoolName', 'profName', 'className', 'matiereName', 'baremeName']
@@ -708,64 +433,56 @@ def generate_treatment_plan():
         'groupName': data.get('groupName', '')
     }
 
-    # Gestion des groupes d'étudiants
-    groups = {
-        'treatment': [],
-        'support': [],
-        'excellence': []
-    }
-    
-    if 'groups' in data:
-        groups = {
-            'treatment': [{'name': n} for n in data['groups'].get('treatment', [])],
-            'support': [{'name': n} for n in data['groups'].get('support', [])],
-            'excellence': [{'name': n} for n in data['groups'].get('excellence', [])]
-        }
-    
-    context['groups'] = groups
-
     # Préparation des solutions et problèmes
     solutions = []
     problems = []
     
     # Mode sélection personnalisée
     if 'selectedItems' in data:
+        print("🔄 Mode: Sélection personnalisée")
+        
         # Solutions sélectionnées
-        for sol in data['selectedItems'].get('solutions', []):
+        selected_solutions = data['selectedItems'].get('solutions', [])
+        print(f"   - Solutions sélectionnées: {len(selected_solutions)}")
+        
+        for sol in selected_solutions:
             if isinstance(sol, dict):
                 text = sol.get('text', sol.get('solution', ''))
-                source = sol.get('source', 'default')
+                # source = sol.get('source', 'default')  # On ignore la source pour un rapport propre
             else:
                 text = sol
-                source = 'default'
             
             cleaned_text = clean_text(text)
             if cleaned_text:
                 solutions.append({
                     'text': cleaned_text,
-                    'source': source,
-                    'source_label': lang_ctx.get(f'source_{source}_label', '')
+                    # 'source': source,  # On n'affiche pas la source
                 })
+                print(f"     ✓ Solution: {cleaned_text[:50]}...")
         
         # Problèmes sélectionnés
-        for prob in data['selectedItems'].get('problems', []):
+        selected_problems = data['selectedItems'].get('problems', [])
+        print(f"   - Problèmes sélectionnés: {len(selected_problems)}")
+        
+        for prob in selected_problems:
             if isinstance(prob, dict):
                 text = prob.get('text', prob.get('probleme', ''))
-                source = prob.get('source', 'default')
+                # source = prob.get('source', 'default')  # On ignore la source
             else:
                 text = prob
-                source = 'default'
             
             cleaned_text = clean_text(text)
             if cleaned_text:
                 problems.append({
                     'text': cleaned_text,
-                    'source': source,
-                    'source_label': lang_ctx.get(f'source_{source}_label', '')
+                    # 'source': source,  # On n'affiche pas la source
                 })
+                print(f"     ✓ Problème: {cleaned_text[:50]}...")
     
     # Mode complet (toutes les données)
     elif 'solutions' in data:
+        print("🔄 Mode: Toutes les données")
+        
         # Solutions par défaut
         default = data['solutions'].get('default', {})
         if default.get('solution'):
@@ -774,7 +491,6 @@ def generate_treatment_plan():
                 solutions.append({
                     'text': cleaned,
                     'source': 'default',
-                    'source_label': lang_ctx.get('source_default_label', '')
                 })
         
         if default.get('probleme'):
@@ -783,7 +499,6 @@ def generate_treatment_plan():
                 problems.append({
                     'text': cleaned,
                     'source': 'default',
-                    'source_label': lang_ctx.get('source_default_label', '')
                 })
         
         # Propositions utilisateur
@@ -794,7 +509,6 @@ def generate_treatment_plan():
                     solutions.append({
                         'text': cleaned,
                         'source': 'personal',
-                        'source_label': lang_ctx.get('source_personal_label', '')
                     })
             
             if proposal.get('probleme'):
@@ -803,7 +517,6 @@ def generate_treatment_plan():
                     problems.append({
                         'text': cleaned,
                         'source': 'personal',
-                        'source_label': lang_ctx.get('source_personal_label', '')
                     })
         
         # Propositions globales
@@ -814,7 +527,6 @@ def generate_treatment_plan():
                     solutions.append({
                         'text': cleaned,
                         'source': 'global',
-                        'source_label': lang_ctx.get('source_global_label', '')
                     })
             
             if proposal.get('probleme'):
@@ -823,8 +535,11 @@ def generate_treatment_plan():
                     problems.append({
                         'text': cleaned,
                         'source': 'global',
-                        'source_label': lang_ctx.get('source_global_label', '')
                     })
+
+    print(f"📊 Résumé:")
+    print(f"   - Solutions totales: {len(solutions)}")
+    print(f"   - Problèmes totaux: {len(problems)}")
 
     # Ajouter au contexte
     context['solutions'] = solutions
