@@ -172,6 +172,73 @@ TREATMENT_PLAN_TEMPLATE = '''
             color: #9b59b6;
         }
 
+        /* ====================== SELECTION SUMMARY ====================== */
+        .selection-summary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: {{ text_align }};
+        }
+
+        .summary-title {
+            font-size: 18pt;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12pt;
+            opacity: 0.9;
+        }
+
+        /* ====================== SOURCE BADGES ====================== */
+        .source-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10pt;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .badge-json {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .badge-global {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .badge-personal {
+            background-color: #3498db;
+            color: white;
+        }
+
         /* ====================== FOOTER ====================== */
         .footer {
             text-align: center;
@@ -200,7 +267,49 @@ TREATMENT_PLAN_TEMPLATE = '''
 <div class="header">
     <h1>{{ main_title }}</h1>
     <div class="date">{{ report_date_label }}: {{ date }}</div>
+    {% if group_name %}
+    <div class="date" style="margin-top: 10px;">
+        <strong>{{ group_name_label }}:</strong> {{ group_name }}
+    </div>
+    {% endif %}
 </div>
+
+{% if selection_counts %}
+<div class="selection-summary">
+    <h2 class="summary-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        {{ selection_title }}
+    </h2>
+    <div class="summary-stats">
+        <div class="stat-item">
+            <div class="stat-value">{{ selection_counts.total }}</div>
+            <div class="stat-label">{{ total_selected_label }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">{{ selection_counts.solutions }}</div>
+            <div class="stat-label">{{ solutions_label }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">{{ selection_counts.problems }}</div>
+            <div class="stat-label">{{ problems_label }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">{{ selection_counts.json }}</div>
+            <div class="stat-label">{{ json_label }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">{{ selection_counts.global }}</div>
+            <div class="stat-label">{{ global_label }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">{{ selection_counts.personal }}</div>
+            <div class="stat-label">{{ personal_label }}</div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 <div class="section">
     <h2 class="section-title">{{ basic_info_title }}</h2>
@@ -214,10 +323,12 @@ TREATMENT_PLAN_TEMPLATE = '''
     </div>
 </div>
 
+{% if groups and (groups.treatment or groups.support or groups.excellence) %}
 <div class="section">
     <h2 class="section-title">{{ classification_title }}</h2>
 
     {% for group_key, group_title in group_titles.items() %}
+    {% if groups[group_key] %}
     <div class="group {{ group_key }}">
         <h3 class="group-title">{{ group_title }}</h3>
 
@@ -238,27 +349,41 @@ TREATMENT_PLAN_TEMPLATE = '''
             </tbody>
         </table>
     </div>
+    {% endif %}
     {% endfor %}
 </div>
+{% endif %}
 
 <div class="section">
     <h2 class="section-title">{{ analysis_title }}</h2>
 
     {% for block_title, items in solution_blocks.items() %}
+    {% if items %}
     <div class="solution-block">
         <h3 class="solution-block-title">{{ block_title }}</h3>
 
-        {% if items %}
-            {% for item in items %}
-            <div class="solution-point">
-                <span class="point-number">{{ loop.index }}.</span>
-                <span class="point-content">{{ item }}</span>
-            </div>
-            {% endfor %}
-        {% else %}
-            <p>{{ no_items_text }}</p>
-        {% endif %}
+        {% for item in items %}
+        <div class="solution-point">
+            <span class="point-number">{{ loop.index }}.</span>
+            <span class="point-content">{{ item.text }}</span>
+            {% if item.source %}
+            <span class="source-badge badge-{{ item.source }}">
+                {{ item.source_label }}
+            </span>
+            {% endif %}
+            {% if item.is_problem %}
+            <span class="source-badge" style="background-color: #e74c3c; color: white;">
+                {{ problem_label }}
+            </span>
+            {% else %}
+            <span class="source-badge" style="background-color: #2ecc71; color: white;">
+                {{ solution_label }}
+            </span>
+            {% endif %}
+        </div>
+        {% endfor %}
     </div>
+    {% endif %}
     {% endfor %}
 </div>
 
@@ -275,45 +400,39 @@ TREATMENT_PLAN_TEMPLATE = '''
 # --------------------------------------------------------------------------
 
 def clean_text(text):
+    """Nettoyer le texte des caractères indésirables"""
     if not text:
-        return []
+        return ""
     unwanted = ['ـ', '●', '★']
     for u in unwanted:
         text = text.replace(u, '')
-    return [line.strip() for line in text.split('\n') if line.strip()]
-
-
-def unify_solutions(data):
-    solutions = set()
-    problems = set()
-
-    blocks = (
-        data['solutions'].get('default', {}),
-        *data['solutions'].get('userProposals', []),
-        *data['solutions'].get('globalProposals', [])
-    )
-
-    for block in blocks:
-        for item in clean_text(block.get('solution', '')):
-            solutions.add(item)
-        for item in clean_text(block.get('probleme', '')):
-            problems.add(item)
-
-    return {
-        'solution': sorted(solutions),
-        'probleme': sorted(problems)
-    }
+    return text.strip()
 
 
 def get_language_context(data):
-
+    """Déterminer le contexte linguistique (français ou arabe)"""
+    
     french_subjects = {
         "expression orale et récitation", "lecture", "production écrite",
-        "écriture", "dictée", "langue", "langue française", "français"
+        "écriture", "dictée", "langue", "langue française", "français",
+        "communication orale", "mathématiques", "éveil scientifique",
+        "éducation islamique", "éducation technologique", "éducation musicale",
+        "éducation artistique", "éducation physique", "grammaire", "anglais",
+        "histoire", "géographie", "éducation civique"
     }
 
     matiere = data.get('matiereName', '').lower()
-    is_fr = any(key in matiere for key in french_subjects)
+    
+    # Vérifier si la matière est en français
+    is_fr = any(keyword in matiere.lower() for keyword in french_subjects)
+    
+    # Vérifier aussi si le nom de la matière est déjà en français
+    if not is_fr:
+        # Vérifier les mots clés français
+        french_keywords = ['expression', 'oral', 'lecture', 'production', 'écrit', 
+                          'écriture', 'dictée', 'langue', 'français', 'anglais',
+                          'mathématiques', 'histoire', 'géographie']
+        is_fr = any(keyword in matiere for keyword in french_keywords)
 
     if is_fr:
         return {
@@ -334,26 +453,46 @@ def get_language_context(data):
             'basic_info_title': "Informations générales",
             'classification_title': "Classification des apprenants",
             'analysis_title': "Analyse des erreurs et propositions",
+            'selection_title': "Résumé de la sélection",
             'solutions_title': "Solutions proposées",
             'problems_title': "Analyse des erreurs",
 
-            # Labels (manquants corrigés)
+            # Labels
             'school_label': "Établissement",
             'teacher_label': "Enseignant(e)",
             'class_label': "Classe",
             'subject_label': "Matière",
             'criteria_label': "Barème",
             'sub_criteria_label': "Sous-barème",
+            'group_name_label': "Groupe",
 
             'group_titles': {
                 'treatment': "Groupe de traitement",
                 'support': "Groupe de soutien",
                 'excellence': "Groupe d'excellence"
             },
+            
             'student_name_label': "Nom de l'élève",
             'group_label': "Groupe",
             'no_items_text': "Aucune donnée disponible",
-            'footer_text': "Rapport généré automatiquement"
+            'footer_text': "Rapport généré automatiquement",
+            
+            # Nouveaux labels pour la sélection
+            'total_selected_label': "Éléments sélectionnés",
+            'solutions_label': "Solutions",
+            'problems_label': "Problèmes",
+            'json_label': "Recommandés",
+            'global_label': "Approuvés",
+            'personal_label': "Personnels",
+            
+            # Labels des sources
+            'json_source_label': "Recommandé",
+            'global_source_label': "Approuvé",
+            'personal_source_label': "Personnel",
+            
+            # Labels type
+            'solution_label': "Solution",
+            'problem_label': "Problème"
         }
 
     # Arabic
@@ -374,26 +513,46 @@ def get_language_context(data):
         'basic_info_title': "المعلومات الأساسية",
         'classification_title': "تصنيف المتعلمين",
         'analysis_title': "تحليل الأخطاء والاقتراحات",
+        'selection_title': "ملخص التحديد",
         'solutions_title': "الحلول المقترحة",
         'problems_title': "تحليل الأخطاء",
 
-        # Labels (manquants corrigés)
+        # Labels
         'school_label': "المؤسسة",
         'teacher_label': "الأستاذ(ة)",
         'class_label': "المستوى",
         'subject_label': "المادة",
         'criteria_label': "المعيار",
         'sub_criteria_label': "المعيار الفرعي",
+        'group_name_label': "المجموعة",
 
         'group_titles': {
             'treatment': "مجموعة العلاج",
             'support': "مجموعة الدعم",
             'excellence': "مجموعة التميز"
         },
+        
         'student_name_label': "اسم المتعلم(ة)",
         'group_label': "المجموعة",
         'no_items_text': "لا توجد بيانات",
-        'footer_text': "تم إنشاء التقرير تلقائياً"
+        'footer_text': "تم إنشاء التقرير تلقائياً",
+        
+        # Nouveaux labels pour la sélection
+        'total_selected_label': "العناصر المحددة",
+        'solutions_label': "حلول",
+        'problems_label': "مشاكل",
+        'json_label': "موصى بها",
+        'global_label': "معتمدة",
+        'personal_label': "شخصية",
+        
+        # Labels des sources
+        'json_source_label': "موصى به",
+        'global_source_label': "معتمد",
+        'personal_source_label': "شخصي",
+        
+        # Labels type
+        'solution_label': "حل",
+        'problem_label': "مشكلة"
     }
 
 
@@ -408,12 +567,10 @@ def generate_treatment_plan():
 
     data = request.get_json()
 
-    required = ['schoolName', 'profName', 'className', 'matiereName', 'baremeName', 'groups', 'solutions']
+    # Vérification des champs requis
+    required = ['schoolName', 'profName', 'className', 'matiereName', 'baremeName']
     if any(key not in data for key in required):
         return jsonify({'error': 'Missing required fields'}), 400
-
-    # Nettoyage et fusion
-    solutions_unified = unify_solutions(data)
 
     # Contexte linguistique
     lang_ctx = get_language_context(data)
@@ -432,21 +589,159 @@ def generate_treatment_plan():
             (lang_ctx['sub_criteria_label'], data['sousBaremeName'])
         )
 
+    # Initialiser le contexte
     context = {
         **lang_ctx,
         'date': datetime.now().strftime('%Y/%m/%d %H:%M'),
         'info_items': info_items,
-        'groups': {
+    }
+
+    # Gestion des groupes d'étudiants
+    if 'groups' in data:
+        context['groups'] = {
             'treatment': [{'name': n} for n in data['groups'].get('treatment', [])],
             'support': [{'name': n} for n in data['groups'].get('support', [])],
             'excellence': [{'name': n} for n in data['groups'].get('excellence', [])]
-        },
-        'solution_blocks': {
-            lang_ctx['solutions_title']: solutions_unified['solution'],
-            lang_ctx['problems_title']: solutions_unified['probleme']
         }
-    }
+    else:
+        context['groups'] = {
+            'treatment': [],
+            'support': [],
+            'excellence': []
+        }
 
+    # Gestion du nom du groupe
+    if 'groupName' in data:
+        context['group_name'] = data['groupName']
+
+    # Gestion des sélections (mode personnalisé)
+    if 'selectedItems' in data:
+        # Mode personnalisé : seulement les éléments sélectionnés
+        context['selection_counts'] = data.get('selectionCounts', {})
+        
+        # Organiser les éléments par type (solution/problème)
+        solution_blocks = {}
+        
+        # Solutions sélectionnées
+        selected_solutions = data['selectedItems'].get('solutions', [])
+        if selected_solutions:
+            solution_items = []
+            for sol in selected_solutions:
+                # Vérifier si c'est un dict avec source ou juste une string
+                if isinstance(sol, dict):
+                    solution_items.append({
+                        'text': clean_text(sol.get('text', sol.get('solution', ''))),
+                        'source': sol.get('source', 'json'),
+                        'source_label': lang_ctx.get(f"{sol.get('source', 'json')}_source_label", ""),
+                        'is_problem': False
+                    })
+                else:
+                    solution_items.append({
+                        'text': clean_text(sol),
+                        'source': 'json',
+                        'source_label': lang_ctx.get('json_source_label', ""),
+                        'is_problem': False
+                    })
+            
+            if solution_items:
+                solution_blocks[lang_ctx['solutions_title']] = solution_items
+        
+        # Problèmes sélectionnés
+        selected_problems = data['selectedItems'].get('problems', [])
+        if selected_problems:
+            problem_items = []
+            for prob in selected_problems:
+                if isinstance(prob, dict):
+                    problem_items.append({
+                        'text': clean_text(prob.get('text', prob.get('probleme', ''))),
+                        'source': prob.get('source', 'json'),
+                        'source_label': lang_ctx.get(f"{prob.get('source', 'json')}_source_label", ""),
+                        'is_problem': True
+                    })
+                else:
+                    problem_items.append({
+                        'text': clean_text(prob),
+                        'source': 'json',
+                        'source_label': lang_ctx.get('json_source_label', ""),
+                        'is_problem': True
+                    })
+            
+            if problem_items:
+                solution_blocks[lang_ctx['problems_title']] = problem_items
+        
+        context['solution_blocks'] = solution_blocks
+        
+    else:
+        # Mode complet : toutes les solutions fusionnées
+        if 'solutions' in data:
+            # Organiser les solutions par source
+            all_solutions = []
+            all_problems = []
+            
+            # Solutions par défaut (JSON)
+            default = data['solutions'].get('default', {})
+            if default.get('solution'):
+                all_solutions.append({
+                    'text': clean_text(default['solution']),
+                    'source': 'json',
+                    'source_label': lang_ctx.get('json_source_label', ""),
+                    'is_problem': False
+                })
+            if default.get('probleme'):
+                all_problems.append({
+                    'text': clean_text(default['probleme']),
+                    'source': 'json',
+                    'source_label': lang_ctx.get('json_source_label', ""),
+                    'is_problem': True
+                })
+            
+            # Propositions utilisateur
+            user_proposals = data['solutions'].get('userProposals', [])
+            for proposal in user_proposals:
+                if proposal.get('solution'):
+                    all_solutions.append({
+                        'text': clean_text(proposal['solution']),
+                        'source': 'personal',
+                        'source_label': lang_ctx.get('personal_source_label', ""),
+                        'is_problem': False
+                    })
+                if proposal.get('probleme'):
+                    all_problems.append({
+                        'text': clean_text(proposal['probleme']),
+                        'source': 'personal',
+                        'source_label': lang_ctx.get('personal_source_label', ""),
+                        'is_problem': True
+                    })
+            
+            # Propositions globales
+            global_proposals = data['solutions'].get('globalProposals', [])
+            for proposal in global_proposals:
+                if proposal.get('solution'):
+                    all_solutions.append({
+                        'text': clean_text(proposal['solution']),
+                        'source': 'global',
+                        'source_label': lang_ctx.get('global_source_label', ""),
+                        'is_problem': False
+                    })
+                if proposal.get('probleme'):
+                    all_problems.append({
+                        'text': clean_text(proposal['probleme']),
+                        'source': 'global',
+                        'source_label': lang_ctx.get('global_source_label', ""),
+                        'is_problem': True
+                    })
+            
+            context['solution_blocks'] = {
+                lang_ctx['solutions_title']: all_solutions,
+                lang_ctx['problems_title']: all_problems
+            }
+        else:
+            context['solution_blocks'] = {
+                lang_ctx['solutions_title']: [],
+                lang_ctx['problems_title']: []
+            }
+
+    # Générer le HTML
     html = render_template_string(TREATMENT_PLAN_TEMPLATE, **context)
     response = make_response(html)
     response.headers['Content-Type'] = 'text/html; charset=utf-8'
