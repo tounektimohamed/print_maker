@@ -177,13 +177,6 @@ COMPLETE_REPORT_TEMPLATE = '''
             line-height: 1.5;
         }
 
-        .item-source {
-            font-size: 9pt;
-            color: #666;
-            margin-top: 5px;
-            font-style: italic;
-        }
-
         .info-table {
             width: 100%;
             border-collapse: collapse;
@@ -322,9 +315,6 @@ COMPLETE_REPORT_TEMPLATE = '''
                 {% for solution in group_data.solutions %}
                 <li>
                     <div class="item-text">{{ solution.text }}</div>
-                    {% if solution.source %}
-                    <div class="item-source">({{ get_source_text(solution.source) }})</div>
-                    {% endif %}
                 </li>
                 {% endfor %}
             </ul>
@@ -338,9 +328,6 @@ COMPLETE_REPORT_TEMPLATE = '''
                 {% for problem in group_data.problems %}
                 <li>
                     <div class="item-text">{{ problem.text }}</div>
-                    {% if problem.source %}
-                    <div class="item-source">({{ get_source_text(problem.source) }})</div>
-                    {% endif %}
                 </li>
                 {% endfor %}
             </ul>
