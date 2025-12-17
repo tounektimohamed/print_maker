@@ -612,7 +612,6 @@ SINGLE_GROUP_TEMPLATE = '''
     {% endfor %}
 </div>
 {% endif %}
-
 {% if groups[active_group].solutions %}
 <div class="content-block">
     <h3 class="block-title solutions-title">{{ solutions_title }}</h3>
@@ -620,9 +619,6 @@ SINGLE_GROUP_TEMPLATE = '''
         {% for solution in groups[active_group].solutions %}
         <li class="solution-item">
             <div class="item-text">{{ solution.text }}</div>
-            {% if solution.source %}
-            <div class="item-source">({{ get_source_text(solution.source) }})</div>
-            {% endif %}
         </li>
         {% endfor %}
     </ul>
@@ -636,14 +632,12 @@ SINGLE_GROUP_TEMPLATE = '''
         {% for problem in groups[active_group].problems %}
         <li class="problem-item">
             <div class="item-text">{{ problem.text }}</div>
-            {% if problem.source %}
-            <div class="item-source">({{ get_source_text(problem.source) }})</div>
-            {% endif %}
         </li>
         {% endfor %}
     </ul>
 </div>
 {% endif %}
+
 
 </body>
 </html>
